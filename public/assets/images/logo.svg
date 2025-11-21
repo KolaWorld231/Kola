@@ -1,0 +1,26 @@
+<svg viewBox="0 0 120 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Volo Text -->
+  <text x="0" y="32" font-family="Inter, sans-serif" font-size="32" font-weight="bold" fill="#D63A3A">
+    Volo
+  </text>
+  
+  <!-- Bird positioned above second 'o' in Volo -->
+  <g transform="translate(75, -8)">
+    <!-- Bird Body - Blue, rounded -->
+    <ellipse cx="16" cy="18" rx="8" ry="6" fill="#1B3F91" />
+    <!-- Bird Head - Blue, circular -->
+    <circle cx="10" cy="16" r="5" fill="#1B3F91" />
+    <!-- Bird Beak - Red, pointing right -->
+    <path d="M14 16 L18 17 L14 18 Z" fill="#D63A3A" />
+    <!-- Bird Eye - White dot -->
+    <circle cx="11" cy="15" r="1.2" fill="#FFFFFF" />
+    <!-- Bird Wing - slightly raised for flying effect -->
+    <ellipse cx="14" cy="17" rx="3" ry="4" fill="#2A56B8" opacity="0.7" transform="rotate(-20 14 17)" />
+  </g>
+</svg>
+
+
+
+
+
+

@@ -1,0 +1,9 @@
+# This file ensures the assets directory structure is tracked in git
+# Actual uploaded files will be stored here but may be excluded from git
+# depending on deployment strategy
+
+
+
+
+
+
