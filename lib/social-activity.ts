@@ -4,6 +4,7 @@
 
 import { prisma } from "./prisma";
 import { Prisma } from "@prisma/client";
+import { toDB } from "./json-fields";
 
 interface CreateActivityParams {
   userId: string;
@@ -32,7 +33,7 @@ export async function createSocialActivity({
         type,
         title,
         message,
-        data: (data as Prisma.InputJsonValue) || undefined,
+        data: toDB(data) ?? undefined,
         isPublic,
       },
     });

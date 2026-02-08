@@ -2,7 +2,9 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/auth-options";
 import { prisma } from "@/lib/prisma";
+import { toDB, fromDB } from "@/lib/json-fields";
 import { isAssessmentRequestBody } from "@/lib/type-guards";
+import { isPrismaError } from "@/types/prisma-errors";
 
 /**
  * POST /api/user/assessment - Save user assessment data
@@ -93,7 +95,7 @@ export async function POST(request: Request) {
           assessmentLanguageId: validatedLanguageId,
           assessmentLevel: level,
           assessmentTribe: tribe || null,
-          assessmentLearningGoals: learningGoals || [],
+          assessmentLearningGoals: learningGoals ? toDB(learningGoals) : null,
           assessmentDailyGoal: dailyGoal || 50,
           assessmentCompletedAt: new Date(),
         },
@@ -103,7 +105,7 @@ export async function POST(request: Request) {
           assessmentLanguageId: validatedLanguageId,
           assessmentLevel: level,
           assessmentTribe: tribe || null,
-          assessmentLearningGoals: learningGoals || [],
+          assessmentLearningGoals: learningGoals ? toDB(learningGoals) : null,
           assessmentDailyGoal: dailyGoal || 50,
           assessmentCompletedAt: new Date(),
         },
@@ -112,7 +114,7 @@ export async function POST(request: Request) {
       console.error("Database error saving assessment:", dbError);
       // If it's a column doesn't exist error, provide helpful message
       const errorCode = isPrismaError(dbError) ? dbError.code : undefined;
-      const errorMessage = dbError instanceof Error ? dbError.message : "";
+      const errorMessage = isPrismaError(dbError) ? dbError.message : (dbError instanceof Error ? dbError.message : "");
       if (errorCode === 'P2021' || errorMessage.includes('column') || errorMessage.includes('does not exist')) {
         return NextResponse.json(
           { error: "Database schema not updated. Please run: npx prisma db push" },
@@ -158,14 +160,14 @@ export async function POST(request: Request) {
     } catch (updateError: unknown) {
       console.error("Error updating user selected language:", {
         error: updateError,
-        code: updateError.code,
-        message: updateError.message,
+        code: isPrismaError(updateError) ? updateError.code : undefined,
+        message: updateError instanceof Error ? updateError.message : undefined,
         validatedLanguageId,
         userId: session.user.id
       });
       
       // If it's a foreign key constraint error
-      if (updateError.code === 'P2003') {
+      if (isPrismaError(updateError) && updateError.code === 'P2003') {
         // Try to find what went wrong
         const verifyAfterError = await prisma.language.findUnique({
           where: { id: validatedLanguageId },
@@ -177,8 +179,8 @@ export async function POST(request: Request) {
             debug: process.env.NODE_ENV === 'development' ? {
               validatedLanguageId,
               languageExists: !!verifyAfterError,
-              errorCode: updateError.code,
-              errorMessage: updateError.message
+              errorCode: isPrismaError(updateError) ? updateError.code : undefined,
+              errorMessage: updateError instanceof Error ? updateError.message : undefined
             } : undefined
           },
           { status: 400 }
@@ -190,23 +192,23 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       success: true,
-      assessment: {
-        languageId: userSettings.assessmentLanguageId,
-        level: userSettings.assessmentLevel,
-        tribe: userSettings.assessmentTribe,
-        learningGoals: userSettings.assessmentLearningGoals,
-        dailyGoal: userSettings.assessmentDailyGoal,
-      },
+        assessment: {
+          languageId: userSettings.assessmentLanguageId,
+          level: userSettings.assessmentLevel,
+          tribe: userSettings.assessmentTribe,
+          learningGoals: fromDB(userSettings.assessmentLearningGoals as string | null),
+          dailyGoal: userSettings.assessmentDailyGoal,
+        },
     });
   } catch (error: unknown) {
     console.error("Error saving assessment:", error);
     // Return more detailed error message for debugging
-    const errorMessage = error?.message || "Internal server error";
-    const errorCode = error?.code;
+    const errorMessage = error instanceof Error ? error.message : (isPrismaError(error) ? error.message : "Internal server error");
+    const errorCode = isPrismaError(error) ? error.code : undefined;
     
     // Provide user-friendly error messages
     let userMessage = "Failed to save assessment. Please try again.";
-    if (errorCode === 'P2021' || errorMessage?.includes('column') || errorMessage?.includes('does not exist')) {
+    if (errorCode === 'P2021' || errorMessage.includes('column') || errorMessage.includes('does not exist')) {
       userMessage = "Database schema needs to be updated. Please contact support.";
     } else if (errorCode === 'P2002') {
       userMessage = "Assessment already exists for this user.";
@@ -254,7 +256,7 @@ export async function GET() {
             languageId: userSettings.assessmentLanguageId,
             level: userSettings.assessmentLevel,
             tribe: userSettings.assessmentTribe,
-            learningGoals: userSettings.assessmentLearningGoals,
+            learningGoals: fromDB(userSettings.assessmentLearningGoals as string | null),
             dailyGoal: userSettings.assessmentDailyGoal,
           }
         : null,
