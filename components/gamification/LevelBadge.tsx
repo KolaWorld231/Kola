@@ -52,7 +52,7 @@ const getBadgeStyle = (level: number) => {
     border: "border-kola-accent/50",
     text: "text-white",
     icon: Star,
-    glow: "shadow-kola-accent/50",,
+    glow: "shadow-kola-accent/50",
   };
 };
 
