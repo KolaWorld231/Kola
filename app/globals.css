@@ -4,56 +4,66 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 0 72% 52%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 217 91% 32%;
-    --secondary-foreground: 0 0% 100%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Joyful Color Palette */
+    --background: #fff7ed; /* Warm cream background */
+    --foreground: #0f172a; /* Deep slate for readable text */
+    --card: #fff7ed;
+    --card-foreground: #0f172a;
+    --popover: #fff7ed;
+    --popover-foreground: #0f172a;
+    --primary: #ff6b6b; /* Coral primary accent */
+    --primary-foreground: #0f172a;
+    --secondary: #ffd166; /* Sunny yellow accent */
+    --secondary-foreground: #0f172a;
+    --muted: #e5e7eb; /* Light Gray - Borders */
+    --muted-foreground: #6b7280;
+    --accent: #4ade80; /* Mint accent */
+    --accent-foreground: #052f2a;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 0 72% 52%;
+    --border: #e5e7eb;
+    --input: #f8fafc;
+    --ring: #ff6b6b;
     --radius: 0.5rem;
-    
-    /* Fresh Color Palette */
-    --fresh-dark: #290907;
-    --fresh-brown: #57473A;
-    --fresh-green: #6E8658;
-    --fresh-blue: #73A1B2;
-    --fresh-sage: #D0D5CE;
-    --fresh-cream: #EFE9E1;
+
+    /* Joyful Palette Tokens */
+    --fresh-dark: #0f172a;
+    --fresh-taupe: #fff7ed;
+    --fresh-sage: #4ade80;
+    --fresh-blue: #2dd4bf;
+    --fresh-gray: #e5e7eb;
+    --fresh-cream: #fff7ed;
+  }
+
+  /* Kola Brand Tokens */
+  :root {
+    --kola-primary: #58a8a8; /* Primary Teal */
+    --kola-bronze: #884828; /* Warm Bronze */
+    --kola-accent: #48a898; /* Accent Green */
+    --kola-deep: #183818; /* Deep Leaf */
+    --kola-cream: #f6efea; /* soft cream for backgrounds */
   }
 
   .dark {
-    --background: 222.2 47.4% 11.2%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 47.4% 11.2%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 47.4% 11.2%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 0 72% 52%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 217 91% 32%;
-    --secondary-foreground: 0 0% 100%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --background: #0b1220; /* Dark navy background */
+    --foreground: #f8fafc; /* Near-white text */
+    --card: #071129;
+    --card-foreground: #f8fafc;
+    --popover: #071129;
+    --popover-foreground: #f8fafc;
+    --primary: #ff6b6b; /* keep coral as accent in dark */
+    --primary-foreground: #f8fafc;
+    --secondary: #ffd166;
+    --secondary-foreground: #071129;
+    --muted: #1f2937;
+    --muted-foreground: #9ca3af;
+    --accent: #4ade80;
+    --accent-foreground: #042617;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 0 72% 52%;
+    --border: #0f172a;
+    --input: #071129;
+    --ring: #ffd166;
   }
 }
 
@@ -68,6 +78,110 @@ body {
     padding-bottom: env(safe-area-inset-bottom, 0);
   }
 
+  /* ==================== FRESH Theme Utilities ==================== */
+  /* FRESH Color Palette: Dark (#290907), Taupe (#57473A), Sage (#6E8658), Blue (#73A1B2), Gray (#D0D5CE), Cream (#EFE9E1) */
+
+  .bg-fresh-dark {
+    @apply bg-[#0F172A];
+  }
+  .bg-fresh-taupe {
+    @apply bg-[#FFF7ED];
+  }
+  .bg-fresh-sage {
+    @apply bg-[#4ADE80];
+  }
+  .bg-fresh-blue {
+    @apply bg-[#2DD4BF];
+  }
+  .bg-fresh-gray {
+    @apply bg-[#E5E7EB];
+  }
+  .bg-fresh-cream {
+    @apply bg-[#FFF7ED];
+  }
+
+  /* ==================== KOLA Brand Utilities ==================== */
+  .bg-kola-primary {
+    @apply bg-[#58A8A8];
+  }
+  .bg-kola-bronze {
+    @apply bg-[#884828];
+  }
+  .bg-kola-accent {
+    @apply bg-[#48A898];
+  }
+  .bg-kola-deep {
+    @apply bg-[#183818];
+  }
+  .bg-kola-cream {
+    @apply bg-[#F6EFEA];
+  }
+
+  .text-kola-primary {
+    @apply text-[#58A8A8];
+  }
+  .text-kola-bronze {
+    @apply text-[#884828];
+  }
+  .text-kola-accent {
+    @apply text-[#48A898];
+  }
+  .text-kola-deep {
+    @apply text-[#183818];
+  }
+
+  .border-kola-primary {
+    @apply border-[#58A8A8];
+  }
+  .border-kola-bronze {
+    @apply border-[#884828];
+  }
+
+  .hover\:bg-kola-primary-hover:hover {
+    background-color: #4a8f8f;
+  }
+  .hover\:bg-kola-bronze-hover:hover {
+    background-color: #763b21;
+  }
+
+  .text-fresh-dark {
+    @apply text-[#0F172A];
+  }
+  .text-fresh-taupe {
+    @apply text-[#FFF7ED];
+  }
+  .text-fresh-sage {
+    @apply text-[#4ADE80];
+  }
+  .text-fresh-blue {
+    @apply text-[#2DD4BF];
+  }
+  .text-fresh-gray {
+    @apply text-[#E5E7EB];
+  }
+  .text-fresh-cream {
+    @apply text-[#FFF7ED];
+  }
+
+  .border-fresh-dark {
+    @apply border-[#0F172A];
+  }
+  .border-fresh-taupe {
+    @apply border-[#FFF7ED];
+  }
+  .border-fresh-sage {
+    @apply border-[#4ADE80];
+  }
+  .border-fresh-blue {
+    @apply border-[#2DD4BF];
+  }
+  .border-fresh-gray {
+    @apply border-[#E5E7EB];
+  }
+  .border-fresh-cream {
+    @apply border-[#FFF7ED];
+  }
+
   /* Smooth transitions for Duolingo-style animations */
   .transition-smooth {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -80,11 +194,12 @@ body {
 
   /* Pulse animation for current lesson */
   @keyframes pulse-glow {
-    0%, 100% {
-      box-shadow: 0 0 0 0 rgba(200, 16, 46, 0.4);
+    0%,
+    100% {
+      box-shadow: 0 0 0 0 rgba(41, 9, 7, 0.4);
     }
     50% {
-      box-shadow: 0 0 0 8px rgba(200, 16, 46, 0);
+      box-shadow: 0 0 0 8px rgba(41, 9, 7, 0);
     }
   }
 
@@ -134,7 +249,8 @@ body {
 
 /* Custom animations for Liberian theme */
 @keyframes liberian-bounce {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   50% {
@@ -191,16 +307,20 @@ body {
 }
 
 @keyframes treasureGlow {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 0 10px rgba(234, 179, 8, 0.5);
   }
   50% {
-    box-shadow: 0 0 20px rgba(234, 179, 8, 0.8), 0 0 30px rgba(234, 179, 8, 0.6);
+    box-shadow:
+      0 0 20px rgba(234, 179, 8, 0.8),
+      0 0 30px rgba(234, 179, 8, 0.6);
   }
 }
 
 @keyframes characterBounce {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   50% {
@@ -246,7 +366,7 @@ html {
   html {
     scroll-behavior: auto;
   }
-  
+
   *,
   *::before,
   *::after {
