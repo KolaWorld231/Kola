@@ -245,7 +245,7 @@ export function LearningPath({
             </div>
 
             {/* Interactive Treasure Chest Bonus (after completing unit) - Lazy loaded */}
-            {isLastInUnit && unitIndex < units.length - 1 && (
+            {unit.lessons.length > 0 && unitIndex < units.length - 1 && (
               <Suspense fallback={<div className="h-20 flex items-center justify-center my-6"><LoadingSpinner size="sm" /></div>}>
                 <TreasureChestBonus
                   unitId={unit.id}

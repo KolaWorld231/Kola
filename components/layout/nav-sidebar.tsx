@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Trophy, Gift, User, MoreVertical, BookOpen, Lightbulb, Mic, Users, UsersRound } from "lucide-react";
+import { Home, Trophy, Gift, User, MoreVertical, BookOpen, Lightbulb, Mic, Users, UsersRound, Award } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { cn } from "@/lib/utils";
 import { Logo } from "@/components/logo";
@@ -22,6 +22,7 @@ const navItems: NavItem[] = [
   { href: "/friends", label: "FRIENDS", icon: Users },
   { href: "/study-groups", label: "STUDY GROUPS", icon: UsersRound },
   { href: "/leaderboard", label: "LEADERBOARDS", icon: Trophy },
+  { href: "/achievements", label: "ACHIEVEMENTS", icon: Award },
   { href: "/quests", label: "QUESTS", icon: Gift },
   { href: "/shop", label: "SHOP", icon: BookOpen },
   { href: "/profile", label: "PROFILE", icon: User },

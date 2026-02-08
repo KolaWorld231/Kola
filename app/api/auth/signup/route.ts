@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { hash } from "bcryptjs";
 import { isSignupRequestBody } from "@/lib/type-guards";
-import { isPrismaError, getPrismaErrorCode, getPrismaErrorMeta } from "@/types/prisma-errors";
+import { getPrismaErrorCode, getPrismaErrorMeta } from "@/types/prisma-errors";
 
 export async function POST(request: Request) {
   try {

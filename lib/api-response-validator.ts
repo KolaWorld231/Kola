@@ -81,3 +81,4 @@ export const apiValidators = {
     validateApiResponse<LanguageUpdateResponse>(response, isLanguageUpdateResponse, "Invalid language update response"),
 };
 
+

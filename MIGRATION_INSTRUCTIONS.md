@@ -72,3 +72,4 @@ ALTER TABLE "exercises" DROP COLUMN IF EXISTS "grammar_tip";
 
 
 
+

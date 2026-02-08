@@ -3,15 +3,21 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useSpeechRecognition } from "@/lib/hooks/use-speech-recognition";
-import { Mic, MicOff, CheckCircle2, XCircle } from "lucide-react";
+import { Mic, MicOff, CheckCircle2, XCircle, Volume2, TrendingUp, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { calculatePronunciationScore, isPronunciationAcceptable } from "@/lib/pronunciation-scorer";
+import { ProgressBar } from "@/components/ui/progress-bar";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface SpeakExerciseProps {
   question: string;
   correctAnswer: string;
   language?: string;
-  onComplete: (isCorrect: boolean) => void;
+  onComplete: (isCorrect: boolean, score?: number) => void;
   disabled?: boolean;
+  showScoring?: boolean; // Enable detailed pronunciation scoring
+  audioUrl?: string; // Audio file to play as reference
+  phonetic?: string; // Phonetic transcription
 }
 
 export function SpeakExercise({
@@ -20,9 +26,16 @@ export function SpeakExercise({
   language = "en-US",
   onComplete,
   disabled = false,
+  showScoring = true,
+  audioUrl,
+  phonetic,
 }: SpeakExerciseProps) {
   const [hasAnswered, setHasAnswered] = useState(false);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+  const [pronunciationScore, setPronunciationScore] = useState<number | null>(null);
+  const [accuracy, setAccuracy] = useState<"excellent" | "good" | "fair" | "poor" | null>(null);
+  const [feedback, setFeedback] = useState<string>("");
+  const [attempts, setAttempts] = useState(0);
 
   const {
     isSupported,
@@ -47,27 +60,49 @@ export function SpeakExercise({
   });
 
   const checkAnswer = (userTranscript: string) => {
-    if (hasAnswered || disabled) return;
+    if (hasAnswered || disabled || !userTranscript.trim()) return;
 
-    // Normalize both transcripts for comparison
-    const normalizedUser = userTranscript.trim().toLowerCase();
-    const normalizedCorrect = correctAnswer.trim().toLowerCase();
+    setAttempts((prev) => prev + 1);
 
-    // Check for exact match or partial match
-    const exactMatch = normalizedUser === normalizedCorrect;
-    const containsCorrect = normalizedUser.includes(normalizedCorrect) || normalizedCorrect.includes(normalizedUser);
-    
-    // For pronunciation practice, we allow some flexibility
-    const isCorrectAnswer = exactMatch || containsCorrect;
+    if (showScoring) {
+      // Use pronunciation scoring
+      const scoring = calculatePronunciationScore(userTranscript, correctAnswer, 70);
+      setPronunciationScore(scoring.score);
+      setAccuracy(scoring.accuracy);
+      setFeedback(scoring.feedback);
+      setIsCorrect(scoring.isCorrect);
+      setHasAnswered(true);
+      stopListening();
 
-    setIsCorrect(isCorrectAnswer);
-    setHasAnswered(true);
-    stopListening();
+      // Call onComplete with score
+      setTimeout(() => {
+        onComplete(scoring.isCorrect, scoring.score);
+      }, 2000);
+    } else {
+      // Simple binary check (legacy mode)
+      const normalizedUser = userTranscript.trim().toLowerCase();
+      const normalizedCorrect = correctAnswer.trim().toLowerCase();
+      const exactMatch = normalizedUser === normalizedCorrect;
+      const containsCorrect = normalizedUser.includes(normalizedCorrect) || normalizedCorrect.includes(normalizedUser);
+      const isCorrectAnswer = exactMatch || containsCorrect;
 
-    // Call onComplete after a short delay to show feedback
-    setTimeout(() => {
-      onComplete(isCorrectAnswer);
-    }, 1500);
+      setIsCorrect(isCorrectAnswer);
+      setHasAnswered(true);
+      stopListening();
+
+      setTimeout(() => {
+        onComplete(isCorrectAnswer);
+      }, 1500);
+    }
+  };
+
+  const playReferenceAudio = () => {
+    if (audioUrl) {
+      const audio = new Audio(audioUrl);
+      audio.play().catch((error) => {
+        console.error("Error playing audio:", error);
+      });
+    }
   };
 
   const handleStartListening = () => {
@@ -116,10 +151,31 @@ export function SpeakExercise({
 
       {/* Instructions */}
       <div className="p-4 rounded-lg bg-primary/10 dark:bg-primary/20 border border-primary/20 dark:border-primary/30">
-        <p className="text-sm text-foreground-light dark:text-foreground-darkModeLight">
-          Click the microphone button and say the phrase out loud. Speak clearly
-          and at a normal pace.
-        </p>
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex-1">
+            <p className="text-sm text-foreground-light dark:text-foreground-darkModeLight mb-2">
+              Click the microphone button and say the phrase out loud. Speak clearly
+              and at a normal pace.
+            </p>
+            {phonetic && (
+              <p className="text-xs text-foreground-light dark:text-foreground-darkModeLight italic">
+                Phonetic: {phonetic}
+              </p>
+            )}
+          </div>
+          {audioUrl && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={playReferenceAudio}
+              className="shrink-0"
+              aria-label="Play reference audio"
+            >
+              <Volume2 className="h-4 w-4 mr-2" />
+              Listen
+            </Button>
+          )}
+        </div>
       </div>
 
       {/* Error Message */}
@@ -171,32 +227,102 @@ export function SpeakExercise({
         )}
 
         {/* Feedback */}
-        {hasAnswered && (
-          <div
-            className={cn(
-              "flex items-center gap-3 p-4 rounded-lg",
-              isCorrect
-                ? "bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-200 border border-green-200 dark:border-green-800"
-                : "bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-200 border border-red-200 dark:border-red-800"
-            )}
-          >
-            {isCorrect ? (
-              <CheckCircle2 className="h-6 w-6" />
-            ) : (
-              <XCircle className="h-6 w-6" />
-            )}
-            <div>
-              <p className="font-semibold">
-                {isCorrect ? "Great pronunciation!" : "Not quite right"}
-              </p>
-              {!isCorrect && (
-                <p className="text-sm mt-1">
-                  Correct answer: <strong>{correctAnswer}</strong>
-                </p>
+        <AnimatePresence>
+          {hasAnswered && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className={cn(
+                "p-5 rounded-xl border-2 transition-all",
+                isCorrect
+                  ? "bg-success/10 dark:bg-success/20 border-success dark:border-success/50"
+                  : "bg-destructive/10 dark:bg-destructive/20 border-destructive dark:border-destructive/50"
               )}
-            </div>
-          </div>
-        )}
+            >
+              <div className="flex items-start gap-4">
+                {isCorrect ? (
+                  <CheckCircle2 className="h-6 w-6 text-success shrink-0 mt-1" />
+                ) : (
+                  <XCircle className="h-6 w-6 text-destructive shrink-0 mt-1" />
+                )}
+                <div className="flex-1 space-y-3">
+                  <div>
+                    <p className="font-semibold text-lg">
+                      {feedback || (isCorrect ? "Great pronunciation!" : "Not quite right")}
+                    </p>
+                  </div>
+
+                  {/* Pronunciation Score */}
+                  {showScoring && pronunciationScore !== null && (
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium text-foreground-light dark:text-foreground-darkModeLight">
+                          Pronunciation Score
+                        </span>
+                        <span className={cn(
+                          "text-lg font-bold",
+                          pronunciationScore >= 90
+                            ? "text-success"
+                            : pronunciationScore >= 75
+                            ? "text-primary"
+                            : pronunciationScore >= 70
+                            ? "text-warning"
+                            : "text-destructive"
+                        )}>
+                          {pronunciationScore}%
+                        </span>
+                      </div>
+                      <ProgressBar
+                        value={pronunciationScore}
+                        variant={
+                          pronunciationScore >= 90
+                            ? "success"
+                            : pronunciationScore >= 75
+                            ? "default"
+                            : pronunciationScore >= 70
+                            ? "warning"
+                            : "destructive"
+                        }
+                        className="h-2"
+                      />
+                      {accuracy && (
+                        <div className="flex items-center gap-2 text-xs">
+                          <TrendingUp className={cn(
+                            "h-4 w-4",
+                            accuracy === "excellent" || accuracy === "good"
+                              ? "text-success"
+                              : "text-warning"
+                          )} />
+                          <span className="capitalize text-foreground-light dark:text-foreground-darkModeLight">
+                            {accuracy} accuracy
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {!isCorrect && (
+                    <div className="p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
+                      <div className="flex items-start gap-2">
+                        <AlertCircle className="h-4 w-4 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
+                        <div className="text-sm text-blue-800 dark:text-blue-200">
+                          <p className="font-semibold mb-1">Correct answer:</p>
+                          <p className="font-bold text-base">{correctAnswer}</p>
+                          {attempts < 2 && (
+                            <p className="mt-2 text-xs">
+                              {attempts === 1 ? "You can try again!" : "Listen and try again."}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Correct Answer Display */}

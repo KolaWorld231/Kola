@@ -47,3 +47,14 @@ next-env.d.ts
 # coverage
 /coverage/
 
+# Capacitor / Android
+/android/app/build/
+/android/.gradle/
+/android/local.properties
+/android/.idea/
+*.apk
+*.aab
+*.keystore
+android/key.properties
+*.jks
+

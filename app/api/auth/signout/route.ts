@@ -1,16 +1,14 @@
 import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/auth-options";
 
+/**
+ * Custom signout endpoint
+ * Note: NextAuth's signOut from next-auth/react automatically calls
+ * /api/auth/signout which is handled by NextAuth itself.
+ * This endpoint is kept for compatibility but NextAuth handles the actual signout.
+ */
 export async function POST(_request: Request) {
-  const session = await getServerSession(authOptions);
-  
-  if (session) {
-    // Sign out on server side
-    // Note: Client-side signOut from next-auth/react should be used
-    return NextResponse.json({ message: "Signed out" });
-  }
-  
-  return NextResponse.json({ message: "Not signed in" });
+  // NextAuth handles the actual signout through its own endpoint
+  // This is just a placeholder for any custom logic if needed
+  return NextResponse.json({ message: "Signed out" });
 }
 

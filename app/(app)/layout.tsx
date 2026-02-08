@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { authOptions } from "@/app/api/auth/[...nextauth]/auth-options";
 import { hasCompletedOnboarding } from "@/lib/onboarding";
+import { isAdmin } from "@/lib/admin";
 import { NavSidebar } from "@/components/layout/nav-sidebar";
 import { MobileNav } from "@/components/layout/mobile-nav";
 import { TopBar } from "@/components/layout/top-bar";
@@ -32,16 +33,16 @@ export default async function AppLayout({
   // Check if user has completed onboarding assessment
   // New users (first-time login) will not have completed this yet
   const completed = await hasCompletedOnboarding(session.user.id);
+  const isUserAdmin = await isAdmin(session.user.id);
 
-  if (!completed) {
-    // User hasn't completed onboarding - redirect to onboarding
-    // This ensures first-time users complete onboarding before accessing app
+  if (!completed && !isUserAdmin) {
+    // User hasn't completed onboarding - redirect to onboarding (unless admin)
     console.log("[APP] User has not completed onboarding, redirecting to onboarding");
     redirect("/onboarding");
   }
 
-  // User has completed onboarding - allow access to app routes
-  // This is a returning user who has already completed onboarding
+  // User has completed onboarding OR is admin - allow access to app routes
+  // This is a returning user or an admin who can skip onboarding
 
   return (
     <ErrorBoundary>

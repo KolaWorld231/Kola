@@ -167,11 +167,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { vocabularyId, knowsIt } = await request.json();
+    const { vocabularyId, knowsIt, quality } = await request.json();
 
-    if (!vocabularyId || typeof knowsIt !== "boolean") {
+    if (!vocabularyId || (typeof knowsIt !== "boolean" && typeof quality !== "number")) {
       return NextResponse.json(
-        { error: "vocabularyId and knowsIt are required" },
+        { error: "vocabularyId and knowsIt (boolean) or quality (0-3) are required" },
         { status: 400 }
       );
     }
@@ -200,7 +200,10 @@ export async function POST(request: Request) {
     });
 
     // Calculate next review using spaced repetition
-    const quality = knowsIt ? 3 : 0; // 3 = know it, 0 = don't know it
+    // Support both legacy binary mode (knowsIt) and new quality mode (0-3)
+    const reviewQuality = quality !== undefined 
+      ? Math.max(0, Math.min(3, quality)) // Clamp 0-3
+      : (knowsIt ? 2 : 0); // Legacy: 2 = good (know it), 0 = again (don't know it)
     const now = new Date();
     const currentStats = existingProgress
       ? {
@@ -216,7 +219,7 @@ export async function POST(request: Request) {
 
     const { calculateNextReview } = await import("@/lib/spaced-repetition");
     const nextReview = calculateNextReview(
-      quality,
+      reviewQuality,
       currentStats.interval,
       currentStats.easeFactor,
       currentStats.repetitions
@@ -252,15 +255,16 @@ export async function POST(request: Request) {
       },
     });
 
-    // Award XP for knowing the word
-    if (knowsIt) {
+    // Award XP based on quality (0=again: 0 XP, 1=hard: 1 XP, 2=good: 2 XP, 3=easy: 3 XP)
+    const xpEarned = reviewQuality > 0 ? reviewQuality : 0;
+    if (xpEarned > 0) {
       await prisma.userXP.create({
         data: {
           userId: session.user.id,
-          amount: 2, // 2 XP per flashcard reviewed correctly
+          amount: xpEarned,
           source: "flashcard",
           sourceId: vocabularyId,
-          description: `Reviewed flashcard: ${vocabulary.word}`,
+          description: `Reviewed flashcard: ${vocabulary.word} (${reviewQuality === 1 ? "hard" : reviewQuality === 2 ? "good" : "easy"})`,
         },
       });
 
@@ -268,14 +272,18 @@ export async function POST(request: Request) {
       await prisma.user.update({
         where: { id: session.user.id },
         data: {
-          totalXP: { increment: 2 },
+          totalXP: { increment: xpEarned },
         },
       });
     }
 
     return NextResponse.json({
       message: "Flashcard reviewed",
-      xpEarned: knowsIt ? 2 : 0,
+      xpEarned,
+      nextReview: nextReviewDate,
+      interval: nextReview.interval,
+      easeFactor: nextReview.easeFactor,
+      repetitions: nextReview.repetitions,
     });
   } catch (error) {
     console.error("Error updating flashcard progress:", error);

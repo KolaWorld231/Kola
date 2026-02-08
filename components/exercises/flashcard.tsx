@@ -14,8 +14,9 @@ interface FlashcardProps {
   audioUrl?: string;
   imageUrl?: string;
   onFlip?: () => void;
-  onAnswer: (knowIt: boolean) => void;
+  onAnswer: (knowIt: boolean, quality?: number) => void;
   disabled?: boolean;
+  useQualityRating?: boolean; // Enable 4-level quality rating
 }
 
 export function Flashcard({
@@ -27,10 +28,12 @@ export function Flashcard({
   onFlip,
   onAnswer,
   disabled,
+  useQualityRating = false,
 }: FlashcardProps) {
   const [isFlipped, setIsFlipped] = useState(false);
   const [isAnswered, setIsAnswered] = useState(false);
   const [userKnowsIt, setUserKnowsIt] = useState<boolean | null>(null);
+  const [quality, setQuality] = useState<number | null>(null);
 
   const handleFlip = () => {
     if (!disabled && !isAnswered) {
@@ -39,18 +42,30 @@ export function Flashcard({
     }
   };
 
-  const handleAnswer = (knowsIt: boolean) => {
+  const handleAnswer = (knowsIt: boolean, qualityRating?: number) => {
     if (disabled || isAnswered) return;
     
     setUserKnowsIt(knowsIt);
+    setQuality(qualityRating || null);
     setIsAnswered(true);
-    onAnswer(knowsIt);
+    onAnswer(knowsIt, qualityRating);
+  };
+
+  const handleQualityAnswer = (qualityRating: number) => {
+    if (disabled || isAnswered) return;
+    
+    const knowsIt = qualityRating > 0;
+    setQuality(qualityRating);
+    setUserKnowsIt(knowsIt);
+    setIsAnswered(true);
+    onAnswer(knowsIt, qualityRating);
   };
 
   const handleReset = () => {
     setIsFlipped(false);
     setIsAnswered(false);
     setUserKnowsIt(null);
+    setQuality(null);
   };
 
   const playAudio = () => {
@@ -150,27 +165,74 @@ export function Flashcard({
 
       {/* Answer Buttons */}
       {isFlipped && !isAnswered && (
-        <div className="flex gap-4 justify-center">
-          <Button
-            variant="destructive"
-            size="lg"
-            onClick={() => handleAnswer(false)}
-            disabled={disabled}
-            className="flex-1 max-w-xs"
-          >
-            <XCircle className="mr-2 h-5 w-5" />
-            Don&apos;t Know
-          </Button>
-          <Button
-            variant="default"
-            size="lg"
-            onClick={() => handleAnswer(true)}
-            disabled={disabled}
-            className="flex-1 max-w-xs"
-          >
-            <CheckCircle2 className="mr-2 h-5 w-5" />
-            Know It
-          </Button>
+        <div className="flex flex-col gap-3">
+          {useQualityRating ? (
+            // 4-level quality rating (Anki-style)
+            <div className="grid grid-cols-4 gap-2">
+              <Button
+                variant="destructive"
+                size="lg"
+                onClick={() => handleQualityAnswer(0)}
+                disabled={disabled}
+                className="flex-1"
+              >
+                <XCircle className="mr-1 h-4 w-4" />
+                <span className="text-xs sm:text-sm">Again</span>
+              </Button>
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={() => handleQualityAnswer(1)}
+                disabled={disabled}
+                className="flex-1 border-orange-400 text-orange-600 hover:bg-orange-50"
+              >
+                <span className="text-xs sm:text-sm">Hard</span>
+              </Button>
+              <Button
+                variant="default"
+                size="lg"
+                onClick={() => handleQualityAnswer(2)}
+                disabled={disabled}
+                className="flex-1 bg-blue-500 hover:bg-blue-600"
+              >
+                <span className="text-xs sm:text-sm">Good</span>
+              </Button>
+              <Button
+                variant="default"
+                size="lg"
+                onClick={() => handleQualityAnswer(3)}
+                disabled={disabled}
+                className="flex-1 bg-green-500 hover:bg-green-600"
+              >
+                <CheckCircle2 className="mr-1 h-4 w-4" />
+                <span className="text-xs sm:text-sm">Easy</span>
+              </Button>
+            </div>
+          ) : (
+            // Binary mode (legacy)
+            <div className="flex gap-4 justify-center">
+              <Button
+                variant="destructive"
+                size="lg"
+                onClick={() => handleAnswer(false)}
+                disabled={disabled}
+                className="flex-1 max-w-xs"
+              >
+                <XCircle className="mr-2 h-5 w-5" />
+                Don&apos;t Know
+              </Button>
+              <Button
+                variant="default"
+                size="lg"
+                onClick={() => handleAnswer(true)}
+                disabled={disabled}
+                className="flex-1 max-w-xs"
+              >
+                <CheckCircle2 className="mr-2 h-5 w-5" />
+                Know It
+              </Button>
+            </div>
+          )}
         </div>
       )}
 

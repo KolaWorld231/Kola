@@ -8,19 +8,31 @@ import { Button } from "./ui/button";
 import { Avatar } from "./ui/avatar";
 import { SignOutButton } from "./sign-out-button";
 import { Menu, X, User, Trophy, BookOpen } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 
 export function Header() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
-  const isAuthenticated = !!session?.user;
+  // Prevent hydration mismatch by only rendering session-dependent content after mount
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
+  // Only check authentication after component has mounted to prevent hydration errors
+  // During SSR, always show unauthenticated state to match initial client render
+  // The useSession hook automatically updates when sign-out occurs
+  const isAuthenticated = mounted && status === "authenticated" && !!session?.user;
+
+  // Default to unauthenticated links during SSR/initial render to prevent hydration mismatch
   const navLinks = isAuthenticated
     ? [
         { href: "/dashboard", label: "Dashboard", icon: BookOpen },
+        { href: "/stories", label: "Stories", icon: BookOpen },
+        { href: "/friends", label: "Friends", icon: User },
         { href: "/leaderboard", label: "Leaderboard", icon: Trophy },
         { href: "/profile", label: "Profile", icon: User },
       ]

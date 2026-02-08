@@ -46,6 +46,20 @@ function SignInForm() {
         // - Returning users (completed onboarding) → redirect to dashboard
         // - Layouts will handle redirects if this check fails
         try {
+          // Check if user is admin first - admins should go directly to dashboard
+          const userResponse = await fetch("/api/user/me");
+          if (userResponse.ok) {
+            const userData = await userResponse.json();
+            if (userData.isAdmin) {
+              // Admin user - skip onboarding, go directly to dashboard
+              console.log("[SIGNIN] Admin user detected, redirecting to dashboard");
+              router.push("/dashboard");
+              router.refresh();
+              return;
+            }
+          }
+
+          // For non-admin users, check assessment status
           const assessmentResponse = await fetch("/api/user/assessment/status");
           if (assessmentResponse.ok) {
             const assessmentData = await assessmentResponse.json();

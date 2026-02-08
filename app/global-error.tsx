@@ -7,7 +7,6 @@
 
 import { useEffect } from "react";
 import * as Sentry from "@sentry/nextjs";
-import { ErrorBoundary } from "@/components/ui/error-boundary";
 import { Button } from "@/components/ui/button";
 import { AlertCircle, Home } from "lucide-react";
 import Link from "next/link";
@@ -75,4 +74,5 @@ export default function GlobalError({
     </html>
   );
 }
+
 

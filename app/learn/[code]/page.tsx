@@ -47,6 +47,17 @@ export default async function LanguageLearningPage({ params }: PageProps) {
     redirect("/learn");
   }
 
+  // Fetch user with stats
+  const user = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: {
+      id: true,
+      currentStreak: true,
+      totalXP: true,
+      hearts: true,
+    },
+  });
+
   // Update user's selected language
   await prisma.user.update({
     where: { id: session.user.id },

@@ -42,3 +42,4 @@ export async function getOnboardingRedirect(userId: string): Promise<string> {
   return completed ? "/dashboard" : "/onboarding";
 }
 
+

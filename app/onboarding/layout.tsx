@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/auth-options";
 import { hasCompletedOnboarding } from "@/lib/onboarding";
+import { isAdmin } from "@/lib/admin";
 
 /**
  * Server-side layout that protects the onboarding route
@@ -28,16 +29,16 @@ export default async function OnboardingLayout({
   // Check if user has already completed onboarding
   // This is the critical check - if completed, user should NEVER see onboarding again
   const completed = await hasCompletedOnboarding(session.user.id);
+  const isUserAdmin = await isAdmin(session.user.id);
 
-  if (completed) {
-    // User has completed onboarding - redirect to dashboard immediately
-    // This prevents returning users from seeing onboarding
-    console.log("[ONBOARDING] User has completed onboarding, redirecting to dashboard");
+  if (completed || isUserAdmin) {
+    // User has completed onboarding OR is admin - redirect to dashboard
+    // Admins should NOT go through onboarding process
+    console.log("[ONBOARDING] User has completed onboarding OR is admin, redirecting to dashboard", { isAdmin: isUserAdmin });
     redirect("/dashboard");
   }
 
-  // User hasn't completed onboarding - allow access to onboarding page
-  // This is a first-time user or a user who hasn't finished onboarding yet
+  // Only allow access for regular users who haven't completed onboarding
   console.log("[ONBOARDING] User has not completed onboarding, allowing access");
   return <>{children}</>;
 }

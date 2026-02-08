@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { BookOpen, HelpCircle, MessageCircle, AlertCircle, FileText, Settings, Users } from "lucide-react";
+import { BookOpen, HelpCircle, MessageCircle, AlertCircle, FileText, Settings } from "lucide-react";
 
 export default function HelpPage() {
   return (
@@ -214,4 +214,5 @@ export default function HelpPage() {
     </div>
   );
 }
+
 

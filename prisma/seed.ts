@@ -657,6 +657,68 @@ I ni ma! Mɛn ɓɛɛ ba pele.`,
       },
     });
 
+    // Create the story record
+    await prisma.story.upsert({
+      where: { lessonId: storyLesson.id },
+      update: {},
+      create: {
+        lessonId: storyLesson.id,
+        title: "A Day in Monrovia",
+        content: `Kpɛlɛwoo! Mɛn nɛɛ ɓɛɛ James. Mɛn ɓɛɛ Monrovia la.
+
+I ni taa! Mɛn ɓɛɛ tɔɔ tɔɔ kpɛlɛ. Wo tɔɔ tɔɔ kpɛlɛ li ma?
+
+Mɛn ɓɛɛ kpɛlɛwoo la ni su. Wo ni taa ma? Mɛn ɓɛɛ mu.
+
+I ni ma! Mɛn ɓɛɛ ba pele.`,
+        translation: `Hello! My name is James. I am in Monrovia.
+
+Good morning! I speak Kpelle. Do you speak Kpelle?
+
+I speak Kpelle a little. Do you speak? I speak a lot.
+
+Good afternoon! I have a child.`,
+        difficulty: "easy",
+      },
+    });
+
+    // Create story questions
+    const storyQ1 = await prisma.storyQuestion.create({
+      data: {
+        storyId: storyLesson.id,
+        question: "What is the main character's name?",
+        correctAnswer: "James",
+        order: 1,
+      },
+    });
+
+    await prisma.storyQuestionOption.createMany({
+      data: [
+        { questionId: storyQ1.id, text: "James", isCorrect: true, order: 1 },
+        { questionId: storyQ1.id, text: "John", isCorrect: false, order: 2 },
+        { questionId: storyQ1.id, text: "Mary", isCorrect: false, order: 3 },
+        { questionId: storyQ1.id, text: "Sarah", isCorrect: false, order: 4 },
+      ],
+    });
+
+    const storyQ2 = await prisma.storyQuestion.create({
+      data: {
+        storyId: storyLesson.id,
+        question: "Where does the story take place?",
+        correctAnswer: "Monrovia",
+        order: 2,
+      },
+    });
+
+    await prisma.storyQuestionOption.createMany({
+      data: [
+        { questionId: storyQ2.id, text: "Monrovia", isCorrect: true, order: 1 },
+        { questionId: storyQ2.id, text: "Gbarnga", isCorrect: false, order: 2 },
+        { questionId: storyQ2.id, text: "Buchanan", isCorrect: false, order: 3 },
+        { questionId: storyQ2.id, text: "Kakata", isCorrect: false, order: 4 },
+      ],
+    });
+
     // Add comprehension questions for the story
     const storyEx1 = await prisma.exercise.upsert({
       where: { id: "kpelle-story-ex-1" },

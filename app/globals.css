@@ -24,6 +24,14 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 0 72% 52%;
     --radius: 0.5rem;
+    
+    /* Fresh Color Palette */
+    --fresh-dark: #290907;
+    --fresh-brown: #57473A;
+    --fresh-green: #6E8658;
+    --fresh-blue: #73A1B2;
+    --fresh-sage: #D0D5CE;
+    --fresh-cream: #EFE9E1;
   }
 
   .dark {

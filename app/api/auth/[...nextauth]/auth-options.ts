@@ -111,8 +111,14 @@ export const authOptions: NextAuthOptions = {
     async signIn({ user, account: _account, profile: _profile }) {
       console.log("[NEXTAUTH] Sign in event:", { userId: user.id, email: user.email });
     },
-    async signOut({ token: _token, session: _session }) {
-      console.log("[NEXTAUTH] Sign out event");
+    async signOut({ token, session }) {
+      // Log sign out for debugging
+      console.log("[NEXTAUTH] Sign out event:", { 
+        userId: token?.id || session?.user?.id,
+        email: session?.user?.email 
+      });
+      // With JWT strategy, the token is cleared client-side
+      // No server-side cleanup needed for JWT sessions
     },
   },
 };

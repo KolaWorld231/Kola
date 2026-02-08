@@ -158,3 +158,4 @@ if (!completed) {
 
 The system uses multiple layers of protection (server-side layouts, client-side checks, and API validation) to ensure onboarding is a **one-time experience** for each user.
 
+

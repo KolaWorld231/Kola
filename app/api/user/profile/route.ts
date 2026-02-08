@@ -23,6 +23,16 @@ export async function GET(_request: Request) {
         email: true,
         image: true,
         password: true, // Include to check if password exists
+        totalXP: true,
+        currentStreak: true,
+        longestStreak: true,
+        hearts: true,
+        selectedLanguage: {
+          select: {
+            name: true,
+            flagEmoji: true,
+          },
+        },
         settings: {
           select: {
             username: true,
@@ -43,6 +53,11 @@ export async function GET(_request: Request) {
         image: user.image,
         username: user.settings?.username || null,
         password: !!user.password, // Return boolean indicating if password exists
+        totalXP: user.totalXP,
+        currentStreak: user.currentStreak,
+        longestStreak: user.longestStreak,
+        hearts: user.hearts,
+        selectedLanguage: user.selectedLanguage,
       },
     });
   } catch (error) {

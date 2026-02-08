@@ -92,24 +92,34 @@ function FlashcardsContent() {
     }
   }, [status, fetchFlashcards]);
 
-  const handleAnswer = async (knowsIt: boolean) => {
+  const handleAnswer = async (knowsIt: boolean, quality?: number) => {
     const currentFlashcard = flashcards[currentIndex];
     if (!currentFlashcard) return;
 
     setReviewed((prev) => prev + 1);
-    if (knowsIt) {
+    // Consider quality > 0 as "correct" (again=0 is incorrect)
+    const isCorrect = quality !== undefined ? quality > 0 : knowsIt;
+    if (isCorrect) {
       setCorrect((prev) => prev + 1);
     }
 
     // Update flashcard progress
     try {
+      const body: { vocabularyId: string; knowsIt?: boolean; quality?: number } = {
+        vocabularyId: currentFlashcard.id,
+      };
+      
+      // Prefer quality if provided, otherwise use knowsIt
+      if (quality !== undefined) {
+        body.quality = quality;
+      } else {
+        body.knowsIt = knowsIt;
+      }
+
       const response = await fetch("/api/flashcards/review", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          vocabularyId: currentFlashcard.id,
-          knowsIt,
-        }),
+        body: JSON.stringify(body),
       });
 
       if (response.ok) {
@@ -244,6 +254,7 @@ function FlashcardsContent() {
               imageUrl={currentFlashcard.imageUrl || undefined}
               onAnswer={handleAnswer}
               disabled={false}
+              useQualityRating={true}
             />
           )}
         </div>

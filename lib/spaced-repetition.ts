@@ -45,19 +45,32 @@ export function calculateNextReview(
     newEaseFactor = MIN_EASE_FACTOR;
   }
 
-  // Update interval and repetitions
-  if (quality < 2) {
-    // Incorrect answer - reset
+  // Update interval and repetitions based on quality
+  if (quality === 0) {
+    // Again - reset completely
     newInterval = 1;
     newRepetitions = 0;
-  } else {
-    // Correct answer
+  } else if (quality === 1) {
+    // Hard - slight progress, but shorter interval
     if (repetitions === 0) {
       newInterval = 1;
     } else if (repetitions === 1) {
-      newInterval = 6;
+      newInterval = 3; // Shorter than good
+    } else {
+      newInterval = Math.max(1, Math.round(currentInterval * newEaseFactor * 0.8)); // 20% shorter
+    }
+    newRepetitions = Math.max(0, repetitions - 0.5); // Slight penalty
+  } else {
+    // Good (2) or Easy (3) - correct answer
+    if (repetitions === 0) {
+      newInterval = 1;
+    } else if (repetitions === 1) {
+      newInterval = quality === 3 ? 4 : 6; // Easy gets shorter initial interval
     } else {
       newInterval = Math.round(currentInterval * newEaseFactor);
+      if (quality === 3) {
+        newInterval = Math.round(newInterval * 1.2); // Easy gets 20% bonus interval
+      }
     }
     newRepetitions = repetitions + 1;
   }
@@ -71,10 +84,38 @@ export function calculateNextReview(
 
 /**
  * Convert user answer to quality rating
- * @param knowsIt - Whether user knows the flashcard
+ * Quality ratings:
+ * 0 = Again (don't know it)
+ * 1 = Hard
+ * 2 = Good (default for knowing it)
+ * 3 = Easy
+ * @param knowsIt - Whether user knows the flashcard (legacy binary mode)
+ * @param quality - Optional 0-3 quality rating (0=again, 1=hard, 2=good, 3=easy)
  */
-export function answerToQuality(knowsIt: boolean): number {
-  return knowsIt ? 3 : 0; // 3 = easy/know it, 0 = don't know it
+export function answerToQuality(knowsIt?: boolean, quality?: number): number {
+  if (quality !== undefined && quality >= 0 && quality <= 3) {
+    return quality;
+  }
+  // Legacy binary mode: convert knowsIt to quality
+  return knowsIt ? 2 : 0; // 2 = good (default), 0 = again
+}
+
+/**
+ * Get quality label
+ */
+export function getQualityLabel(quality: number): string {
+  switch (quality) {
+    case 0:
+      return "Again";
+    case 1:
+      return "Hard";
+    case 2:
+      return "Good";
+    case 3:
+      return "Easy";
+    default:
+      return "Unknown";
+  }
 }
 
 /**

@@ -13,6 +13,8 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 export const metadata: Metadata = {
   title: "Volo - Learn Liberian Languages",
   description: "Learn Liberian local languages through interactive lessons, stories, and exercises",
+  manifest: "/manifest.json",
+  themeColor: "#000000",
 };
 
 export default function RootLayout({
@@ -34,6 +36,17 @@ export default function RootLayout({
             <Toaster />
           </ErrorBoundary>
         </Providers>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function() {
+                  navigator.serviceWorker.register('/sw.js');
+                });
+              }
+            `,
+          }}
+        />
       </body>
     </html>
   );

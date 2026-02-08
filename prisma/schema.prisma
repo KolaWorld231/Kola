@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -240,7 +240,7 @@ model Achievement {
   icon             String?
   xpReward         Int               @default(0) @map("xp_reward")
   category         String
-  criteria         Json?
+  criteria         String?           @map("criteria") // Changed from Json to String for SQLite compatibility
   isActive         Boolean           @default(true) @map("is_active")
   createdAt        DateTime          @default(now()) @map("created_at")
   updatedAt        DateTime          @updatedAt @map("updated_at")
@@ -286,7 +286,7 @@ model AdminUser {
   id          String   @id @default(cuid())
   userId      String   @unique @map("user_id")
   role        String   @default("moderator")
-  permissions Json?
+  permissions String?  @map("permissions") // Changed from Json to String for SQLite compatibility
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -299,7 +299,7 @@ model DailyChallenge {
   type         String
   target       Int
   rewardXP     Int                  @default(20) @map("reward_xp")
-  date         DateTime             @db.Date
+  date         DateTime             // Removed @db.Date for SQLite compatibility
   isActive     Boolean              @default(true) @map("is_active")
   createdAt    DateTime             @default(now()) @map("created_at")
   updatedAt    DateTime             @updatedAt @map("updated_at")
@@ -422,7 +422,7 @@ model SocialActivity {
   type      String
   title     String
   message   String
-  data      Json?
+  data      String?  @map("data") // Changed from Json to String for SQLite compatibility
   isPublic  Boolean  @default(true) @map("is_public")
   createdAt DateTime @default(now()) @map("created_at")
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -484,7 +484,7 @@ model UserSettings {
   assessmentCompletedAt      DateTime? @map("assessment_completed_at")
   assessmentDailyGoal        Int?      @map("assessment_daily_goal")
   assessmentLanguageId       String?   @map("assessment_language_id")
-  assessmentLearningGoals    String[]  @default([]) @map("assessment_learning_goals")
+  assessmentLearningGoals    String?   @map("assessment_learning_goals") // Changed from String[] to String for SQLite compatibility
   assessmentLevel            String?   @map("assessment_level")
   assessmentTribe            String?   @map("assessment_tribe")
   user                       User      @relation(fields: [userId], references: [id], onDelete: Cascade)

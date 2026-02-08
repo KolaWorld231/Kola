@@ -10,12 +10,13 @@ import { Logo } from "@/components/logo";
 import { ArrowRight, ArrowLeft, CheckCircle2, Globe, Target, Users, BookOpen, Heart, MessageCircle, PenTool, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { apiValidators } from "@/lib/api-response-validator";
 
 interface Language {
   id: string;
   code: string;
   name: string;
-  nativeName: string;
+  nativeName?: string | null;
   flagEmoji?: string | null;
   description?: string | null;
 }
@@ -58,11 +59,13 @@ const DAILY_GOALS = [
 ];
 
 export default function OnboardingPage() {
-  const { data: _session, status } = useSession();
+  const { data: session, status } = useSession();
   const router = useRouter();
   const [step, setStep] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSkipping, setIsSkipping] = useState(false);
+  const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
   const [languages, setLanguages] = useState<Language[]>([]);
   
   // Assessment data
@@ -74,63 +77,72 @@ export default function OnboardingPage() {
 
   const totalSteps = 5;
 
-  // Use cached fetch for languages (static data that rarely changes) with response validation
-  const { data: languagesData, isLoading: languagesLoading } = useCachedFetch(
-    () => fetch("/api/languages").then(async (r) => {
-      if (!r.ok) {
-        throw new Error(`Failed to fetch languages: ${r.status}`);
-      }
-      // Validate response with type guards
-      return apiValidators.languages(r);
-    }),
-    {
-      cacheKey: CACHE_KEYS.languages(),
-      ttl: CACHE_TTL.LANGUAGES,
-      enabled: status === "authenticated",
-    }
-  );
-
+  // Handle authentication redirect
   useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/auth/signin");
+    }
+  }, [status, router]);
+
+  // Check if user is admin
+  useEffect(() => {
+    if (status === "authenticated" && session?.user?.id) {
+      fetch("/api/user/me")
+        .then((res) => res.json())
+        .then((data) => {
+          setIsAdmin(data.isAdmin || false);
+        })
+        .catch(() => {
+          setIsAdmin(false);
+        });
+    }
+  }, [status, session]);
+
+  // Fetch languages when authenticated - simplified approach
+  useEffect(() => {
+    if (status !== "authenticated") {
+      setIsLoading(true);
       return;
     }
 
-    if (status === "authenticated") {
-      checkAssessmentStatus();
-      // Languages will be loaded via useCachedFetch
-      if (languagesData?.languages) {
-        setLanguages(languagesData.languages);
-        setIsLoading(false);
-      } else {
-        setIsLoading(languagesLoading);
-      }
+    // Only fetch if we don't have languages yet
+    if (languages.length > 0) {
+      setIsLoading(false);
+      return;
     }
-  }, [status, router, languagesData, languagesLoading]);
 
-  const checkAssessmentStatus = async () => {
-    try {
-      const response = await fetch("/api/user/assessment/status");
-      if (response.ok) {
-        // Validate response with type guards
-        const data = await apiValidators.assessmentStatus(response);
-        // Double-check: If assessment is already completed, redirect immediately
-        // This is a client-side safeguard (server-side check in layout.tsx is primary)
-        // This prevents returning users who somehow reach this page from seeing onboarding
-        if (data.completed) {
-          console.log("[ONBOARDING] Assessment already completed, redirecting to dashboard (client-side check)");
-          router.push("/dashboard");
-          router.refresh(); // Force refresh to update server state
-          return;
-        } else {
-          console.log("[ONBOARDING] Assessment not completed, allowing onboarding (first-time user)");
+    setIsLoading(true);
+    
+    // Fetch and validate languages
+    console.log("[ONBOARDING] Fetching languages...");
+    fetch("/api/languages")
+      .then(async (r) => {
+        try {
+          console.log("[ONBOARDING] Languages response status:", r.status, r.ok);
+          // apiValidators.languages handles Response.ok check and parsing
+          const data = await apiValidators.languages(r);
+          console.log("[ONBOARDING] Languages data received:", data);
+          if (data?.languages && Array.isArray(data.languages)) {
+            console.log("[ONBOARDING] Setting languages:", data.languages.length, "languages");
+            setLanguages(data.languages);
+            setIsLoading(false);
+          } else {
+            console.warn("[ONBOARDING] No languages found in response:", data);
+            setLanguages([]);
+            setIsLoading(false);
+          }
+        } catch (error) {
+          console.error("[ONBOARDING] Error fetching/validating languages:", error);
+          setLanguages([]);
+          setIsLoading(false);
         }
-      }
-    } catch (error) {
-      console.error("[ONBOARDING] Error checking assessment status:", error);
-      // On error, allow page to render (server-side check will catch if needed)
-    }
-  };
+      })
+      .catch((error) => {
+        console.error("[ONBOARDING] Network error fetching languages:", error);
+        setLanguages([]);
+        setIsLoading(false);
+      });
+  }, [status, languages.length]);
 
   const handleNext = () => {
     if (step < totalSteps) {
@@ -150,6 +162,41 @@ export default function OnboardingPage() {
         ? prev.filter((id) => id !== goalId)
         : [...prev, goalId]
     );
+  };
+
+  const handleSkip = async () => {
+    if (isAdmin) {
+      alert("Admin users must complete onboarding. Please continue with the setup.");
+      return;
+    }
+
+    if (!confirm("Are you sure you want to skip onboarding? You can always update your preferences later in settings.")) {
+      return;
+    }
+
+    setIsSkipping(true);
+    try {
+      const response = await fetch("/api/user/assessment/skip", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      const data = await response.json();
+      
+      if (response.ok) {
+        console.log("Onboarding skipped successfully:", data);
+        router.push("/dashboard");
+        router.refresh();
+      } else {
+        console.error("Error skipping onboarding:", data);
+        alert(data.error || "Failed to skip onboarding. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error skipping onboarding:", error);
+      alert("An error occurred. Please try again.");
+    } finally {
+      setIsSkipping(false);
+    }
   };
 
   const handleSubmit = async () => {
@@ -248,7 +295,8 @@ export default function OnboardingPage() {
     }
   };
 
-  if (status === "loading" || isLoading) {
+  // Show loading only during initial authentication check or when fetching languages
+  if (status === "loading" || (isLoading && languages.length === 0)) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white dark:bg-background-darkMode">
         <LoadingSpinner size="lg" />
@@ -322,35 +370,53 @@ export default function OnboardingPage() {
                 <p className="text-gray-600 dark:text-foreground-darkModeLight mb-4">
                   Choose the Liberian language you'd like to start learning.
                 </p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {languages.map((lang) => (
-                    <button
-                      key={lang.id}
-                      onClick={() => setSelectedLanguageId(lang.id)}
-                      className={cn(
-                        "p-4 rounded-lg border-2 text-left transition-all",
-                        selectedLanguageId === lang.id
-                          ? "border-liberian-blue bg-liberian-blue/10 dark:bg-liberian-blue/20"
-                          : "border-gray-200 dark:border-border-darkMode hover:border-liberian-blue/50 dark:hover:border-liberian-blue/50 bg-white dark:bg-background-darkModeSecondary"
-                      )}
-                    >
-                      <div className="flex items-center gap-3">
-                        <span className="text-2xl">{lang.flagEmoji || "🇱🇷"}</span>
-                        <div className="flex-1">
-                          <div className="font-semibold text-gray-900 dark:text-foreground-darkMode">
-                            {lang.name}
-                          </div>
-                          <div className="text-sm text-gray-600 dark:text-foreground-darkModeLight">
-                            {lang.nativeName}
-                          </div>
-                        </div>
-                        {selectedLanguageId === lang.id && (
-                          <CheckCircle2 className="h-5 w-5 text-liberian-blue" />
+                {isLoading ? (
+                  <div className="flex items-center justify-center py-8">
+                    <LoadingSpinner size="md" />
+                    <span className="ml-3 text-gray-600 dark:text-foreground-darkModeLight">
+                      Loading languages...
+                    </span>
+                  </div>
+                ) : languages.length === 0 ? (
+                  <div className="text-center py-8">
+                    <p className="text-gray-600 dark:text-foreground-darkModeLight mb-2">
+                      No languages available at the moment.
+                    </p>
+                    <p className="text-sm text-gray-500 dark:text-foreground-darkModeLight/70">
+                      Please check back later or contact support.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {languages.map((lang) => (
+                      <button
+                        key={lang.id}
+                        onClick={() => setSelectedLanguageId(lang.id)}
+                        className={cn(
+                          "p-4 rounded-lg border-2 text-left transition-all",
+                          selectedLanguageId === lang.id
+                            ? "border-liberian-blue bg-liberian-blue/10 dark:bg-liberian-blue/20"
+                            : "border-gray-200 dark:border-border-darkMode hover:border-liberian-blue/50 dark:hover:border-liberian-blue/50 bg-white dark:bg-background-darkModeSecondary"
                         )}
-                      </div>
-                    </button>
-                  ))}
-                </div>
+                      >
+                        <div className="flex items-center gap-3">
+                          <span className="text-2xl">{lang.flagEmoji || "🇱🇷"}</span>
+                          <div className="flex-1">
+                            <div className="font-semibold text-gray-900 dark:text-foreground-darkMode">
+                              {lang.name}
+                            </div>
+                            <div className="text-sm text-gray-600 dark:text-foreground-darkModeLight">
+                              {lang.nativeName}
+                            </div>
+                          </div>
+                          {selectedLanguageId === lang.id && (
+                            <CheckCircle2 className="h-5 w-5 text-liberian-blue" />
+                          )}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
 
@@ -514,15 +580,35 @@ export default function OnboardingPage() {
 
         {/* Navigation */}
         <div className="flex justify-between gap-4">
-          <Button
-            variant="outline"
-            onClick={handleBack}
-            disabled={step === 1}
-            className="flex items-center gap-2"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              onClick={handleBack}
+              disabled={step === 1}
+              className="flex items-center gap-2"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back
+            </Button>
+            {/* Skip button - only show for non-admin users */}
+            {isAdmin === false && (
+              <Button
+                variant="ghost"
+                onClick={handleSkip}
+                disabled={isSkipping}
+                className="flex items-center gap-2 text-gray-600 hover:text-gray-900"
+              >
+                {isSkipping ? (
+                  <>
+                    <LoadingSpinner size="sm" />
+                    Skipping...
+                  </>
+                ) : (
+                  "Skip for now"
+                )}
+              </Button>
+            )}
+          </div>
           {step < totalSteps ? (
             <Button
               onClick={handleNext}

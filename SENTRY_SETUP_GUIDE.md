@@ -298,3 +298,4 @@ You can customize filtering in `beforeSend` hooks.
 **Next Step**: Add Sentry DSN to `.env` file  
 **Last Updated**: Sentry integration setup
 
+

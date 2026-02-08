@@ -401,6 +401,9 @@ export default function PronunciationPage() {
                   language={current.language?.code || "en-US"}
                   onComplete={handleComplete}
                   disabled={false}
+                  showScoring={true}
+                  audioUrl={current.audioUrl || undefined}
+                  phonetic={current.phonetic || undefined}
                 />
               </div>
             )}

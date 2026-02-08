@@ -10,6 +10,15 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        // Fresh Color Palette
+        fresh: {
+          dark: "#290907",
+          brown: "#57473A",
+          green: "#6E8658",
+          blue: "#73A1B2",
+          sage: "#D0D5CE",
+          cream: "#EFE9E1",
+        },
         // Volo Brand Palette
         primary: {
           DEFAULT: "#D63A3A", // Liberian Red
@@ -78,12 +87,58 @@ const config: Config = {
         "bounce-slow": "bounce 2s infinite",
         "pulse-slow": "pulse 3s infinite",
         "xp-gain": "xpGain 0.6s ease-out",
+        "wiggle": "wiggle 0.5s ease-in-out",
+        "shake": "shake 0.5s ease-in-out",
+        "float": "float 3s ease-in-out infinite",
+        "glow": "glow 2s ease-in-out infinite",
+        "shimmer": "shimmer 2s linear infinite",
+        "heart-beat": "heartBeat 1s ease-in-out",
+        "fire-flicker": "fireFlicker 0.5s ease-in-out infinite",
+        "letter-bounce": "letterBounce 0.6s ease-out",
       },
       keyframes: {
         xpGain: {
           "0%": { transform: "scale(1)", opacity: "1" },
           "50%": { transform: "scale(1.2)", opacity: "0.9" },
           "100%": { transform: "scale(1)", opacity: "0" },
+        },
+        wiggle: {
+          "0%, 100%": { transform: "rotate(-3deg)" },
+          "50%": { transform: "rotate(3deg)" },
+        },
+        shake: {
+          "0%, 100%": { transform: "translateX(0)" },
+          "25%": { transform: "translateX(-5px)" },
+          "75%": { transform: "translateX(5px)" },
+        },
+        float: {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-10px)" },
+        },
+        glow: {
+          "0%, 100%": { boxShadow: "0 0 5px currentColor" },
+          "50%": { boxShadow: "0 0 20px currentColor, 0 0 30px currentColor" },
+        },
+        shimmer: {
+          "0%": { backgroundPosition: "-200% 0" },
+          "100%": { backgroundPosition: "200% 0" },
+        },
+        heartBeat: {
+          "0%, 100%": { transform: "scale(1)" },
+          "25%": { transform: "scale(1.2)" },
+          "50%": { transform: "scale(1)" },
+          "75%": { transform: "scale(1.2)" },
+        },
+        fireFlicker: {
+          "0%, 100%": { opacity: "1", transform: "scale(1) rotate(-2deg)" },
+          "50%": { opacity: "0.8", transform: "scale(1.1) rotate(2deg)" },
+        },
+        letterBounce: {
+          "0%": { transform: "translateY(0)" },
+          "40%": { transform: "translateY(-20px)" },
+          "60%": { transform: "translateY(-10px)" },
+          "80%": { transform: "translateY(-5px)" },
+          "100%": { transform: "translateY(0)" },
         },
       },
       spacing: {
