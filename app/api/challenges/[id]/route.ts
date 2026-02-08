@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/auth-options";
 import { prisma } from "@/lib/prisma";
+import { toDB } from "@/lib/json-fields";
 
 /**
  * PATCH /api/challenges/[id] - Update challenge status (accept, decline, complete)
@@ -209,11 +210,11 @@ export async function PATCH(
           type: "challenge_won",
           title: "Challenge Completed! 🏆",
           message: `${challenge.receiver.name} completed ${challenge.sender.name}'s challenge!`,
-          data: {
+          data: toDB({
             challengeId: challenge.id,
             challengeType: challenge.type,
             senderId: challenge.senderId,
-          },
+          }),
           isPublic: true,
         },
       });
