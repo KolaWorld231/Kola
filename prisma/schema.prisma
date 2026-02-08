@@ -422,7 +422,7 @@ model SocialActivity {
   type      String
   title     String
   message   String
-  data      String?  @map("data") // Changed from Json to String for SQLite compatibility
+  data      String?  @map("data") // kept as String for SQLite compatibility; store normalized JSON strings
   isPublic  Boolean  @default(true) @map("is_public")
   createdAt DateTime @default(now()) @map("created_at")
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -484,7 +484,7 @@ model UserSettings {
   assessmentCompletedAt      DateTime? @map("assessment_completed_at")
   assessmentDailyGoal        Int?      @map("assessment_daily_goal")
   assessmentLanguageId       String?   @map("assessment_language_id")
-  assessmentLearningGoals    String?   @map("assessment_learning_goals") // Changed from String[] to String for SQLite compatibility
+  assessmentLearningGoals    String?   @map("assessment_learning_goals") // kept as String for SQLite compatibility; store normalized JSON strings
   assessmentLevel            String?   @map("assessment_level")
   assessmentTribe            String?   @map("assessment_tribe")
   user                       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
