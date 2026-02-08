@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 
-interface VoloLoaderProps {
+interface KolaLoaderProps {
   size?: "sm" | "md" | "lg";
   showText?: boolean;
   className?: string;
@@ -14,20 +14,20 @@ const sizeClasses = {
   lg: { letter: "text-6xl", gap: "gap-3" },
 };
 
-const letters = ["V", "O", "L", "O"];
+const letters = ["K", "O", "L", "A"];
 
 const letterColors = [
-  "text-fresh-green",   // V
-  "text-fresh-blue",    // O
-  "text-primary",       // L
-  "text-accent",        // O
+  "text-fresh-green",
+  "text-fresh-blue",
+  "text-primary",
+  "text-accent",
 ];
 
-export function VoloLoader({
+export function KolaLoader({
   size = "md",
   showText = true,
   className = "",
-}: VoloLoaderProps) {
+}: KolaLoaderProps) {
   const styles = sizeClasses[size];
 
   return (
@@ -133,10 +133,10 @@ export function VoloLoader({
 }
 
 // Full page loader variant
-export function FullPageLoader() {
+export function FullPageKolaLoader() {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-fresh-cream/95 backdrop-blur-sm">
-      <VoloLoader size="lg" />
+      <KolaLoader size="lg" />
     </div>
   );
 }

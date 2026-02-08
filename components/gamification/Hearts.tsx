@@ -77,7 +77,7 @@ export function Hearts({
               className={
                 isFilled
                   ? "text-primary fill-primary"
-                  : "text-fresh-sage fill-fresh-sage/30"
+                  : "text-kola-accent fill-kola-accent/30"
               }
             />
           </motion.div>

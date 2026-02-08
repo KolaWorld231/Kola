@@ -81,24 +81,12 @@ body {
   /* ==================== FRESH Theme Utilities ==================== */
   /* FRESH Color Palette: Dark (#290907), Taupe (#57473A), Sage (#6E8658), Blue (#73A1B2), Gray (#D0D5CE), Cream (#EFE9E1) */
 
-  .bg-fresh-dark {
-    @apply bg-[#0F172A];
-  }
-  .bg-fresh-taupe {
-    @apply bg-[#FFF7ED];
-  }
-  .bg-fresh-sage {
-    @apply bg-[#4ADE80];
-  }
-  .bg-fresh-blue {
-    @apply bg-[#2DD4BF];
-  }
-  .bg-fresh-gray {
-    @apply bg-[#E5E7EB];
-  }
-  .bg-fresh-cream {
-    @apply bg-[#FFF7ED];
-  }
+  .bg-fresh-dark { background-color: var(--kola-deep); }
+  .bg-fresh-taupe { background-color: var(--kola-cream); }
+  .bg-fresh-sage { background-color: var(--kola-accent); }
+  .bg-fresh-blue { background-color: var(--kola-primary); }
+  .bg-fresh-gray { background-color: var(--kola-cream); }
+  .bg-fresh-cream { background-color: var(--kola-cream); }
 
   /* ==================== KOLA Brand Utilities ==================== */
   .bg-kola-primary {
@@ -145,41 +133,41 @@ body {
   }
 
   .text-fresh-dark {
-    @apply text-[#0F172A];
+    color: var(--kola-deep);
   }
   .text-fresh-taupe {
-    @apply text-[#FFF7ED];
+    color: var(--kola-cream);
   }
   .text-fresh-sage {
-    @apply text-[#4ADE80];
+    color: var(--kola-accent);
   }
   .text-fresh-blue {
-    @apply text-[#2DD4BF];
+    color: var(--kola-primary);
   }
   .text-fresh-gray {
-    @apply text-[#E5E7EB];
+    color: var(--kola-cream);
   }
   .text-fresh-cream {
-    @apply text-[#FFF7ED];
+    color: var(--kola-cream);
   }
 
   .border-fresh-dark {
-    @apply border-[#0F172A];
+    border-color: var(--kola-deep);
   }
   .border-fresh-taupe {
-    @apply border-[#FFF7ED];
+    border-color: var(--kola-cream);
   }
   .border-fresh-sage {
-    @apply border-[#4ADE80];
+    border-color: var(--kola-accent);
   }
   .border-fresh-blue {
-    @apply border-[#2DD4BF];
+    border-color: var(--kola-primary);
   }
   .border-fresh-gray {
-    @apply border-[#E5E7EB];
+    border-color: var(--kola-cream);
   }
   .border-fresh-cream {
-    @apply border-[#FFF7ED];
+    border-color: var(--kola-cream);
   }
 
   /* Smooth transitions for Duolingo-style animations */

@@ -40,19 +40,19 @@ const getBadgeStyle = (level: number) => {
   }
   if (level >= 10) {
     return {
-      bg: "bg-gradient-to-br from-fresh-blue via-blue-500 to-blue-600",
-      border: "border-fresh-blue/50",
+      bg: "bg-gradient-to-br from-kola-primary via-blue-500 to-blue-600",
+      border: "border-kola-primary/50",
       text: "text-white",
       icon: Star,
-      glow: "shadow-fresh-blue/50",
+      glow: "shadow-kola-primary/50",
     };
   }
   return {
-    bg: "bg-gradient-to-br from-fresh-green via-green-500 to-green-600",
-    border: "border-fresh-green/50",
+    bg: "bg-gradient-to-br from-kola-accent via-green-500 to-green-600",
+    border: "border-kola-accent/50",
     text: "text-white",
     icon: Star,
-    glow: "shadow-fresh-green/50",
+    glow: "shadow-kola-accent/50",,
   };
 };
 

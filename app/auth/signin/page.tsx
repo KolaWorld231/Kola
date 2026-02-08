@@ -243,7 +243,7 @@ function SignInForm() {
         {/* Footer Links */}
         <div className="mt-8 space-y-2 text-xs text-gray-500 text-center">
           <p>
-            By signing in to Volo, you agree to our{" "}
+            By signing in to Kola, you agree to our{" "}
             <Link href="/terms" className="underline hover:text-liberian-red">
               Terms
             </Link>{" "}

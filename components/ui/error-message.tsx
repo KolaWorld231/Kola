@@ -29,9 +29,7 @@ export function ErrorMessage({
   const isRetryable = appError 
     ? (appError.code === "NETWORK_ERROR" || 
        appError.code === "TIMEOUT_ERROR" || 
-       appError.statusCode === 0 ||
-       appError.statusCode === 408 ||
-       (appError.statusCode >= 500 && appError.statusCode < 600))
+       (typeof appError.statusCode === 'number' && (appError.statusCode === 0 || appError.statusCode === 408 || (appError.statusCode >= 500 && appError.statusCode < 600))))
     : false;
 
   // Get actionable suggestions based on error type
@@ -69,7 +67,7 @@ export function ErrorMessage({
           "Try navigating back and trying again"
         ];
       default:
-        if (appError.statusCode >= 500) {
+        if (typeof appError.statusCode === 'number' && appError.statusCode >= 500) {
           return [
             "This is a server error",
             "We've been notified and are working on it",

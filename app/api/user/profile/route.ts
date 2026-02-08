@@ -158,7 +158,6 @@ export async function PUT(request: Request) {
           where: {
             username: {
               equals: username,
-              mode: "insensitive",
             },
             userId: {
               not: session.user.id,

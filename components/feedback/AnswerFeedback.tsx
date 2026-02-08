@@ -28,9 +28,9 @@ const feedbackConfig: Record<
 > = {
   correct: {
     icon: Check,
-    bgColor: "bg-fresh-green/10",
-    textColor: "text-fresh-green",
-    borderColor: "border-fresh-green/30",
+    bgColor: "bg-kola-accent/10",
+    textColor: "text-kola-accent",
+    borderColor: "border-kola-accent/30",
     defaultMessage: "Correct!",
     sound: sounds.correct,
   },
@@ -131,7 +131,7 @@ export function AnswerFeedback({
             <div
               className={`
                 w-10 h-10 rounded-full flex items-center justify-center
-                ${type === "wrong" ? "bg-primary/20" : "bg-fresh-green/20"}
+                ${type === "wrong" ? "bg-primary/20" : "bg-kola-accent/20"}
               `}
             >
               <Icon className={config.textColor} size={24} />

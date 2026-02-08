@@ -18,10 +18,10 @@ const positionClasses = {
 };
 
 const tailClasses = {
-  top: "bottom-0 left-1/2 -translate-x-1/2 translate-y-full border-l-8 border-r-8 border-t-8 border-l-transparent border-r-transparent border-t-fresh-cream",
-  right: "left-0 top-1/2 -translate-y-1/2 -translate-x-full border-t-8 border-b-8 border-r-8 border-t-transparent border-b-transparent border-r-fresh-cream",
-  bottom: "top-0 left-1/2 -translate-x-1/2 -translate-y-full border-l-8 border-r-8 border-b-8 border-l-transparent border-r-transparent border-b-fresh-cream",
-  left: "right-0 top-1/2 -translate-y-1/2 translate-x-full border-t-8 border-b-8 border-l-8 border-t-transparent border-b-transparent border-l-fresh-cream",
+  top: "bottom-0 left-1/2 -translate-x-1/2 translate-y-full border-l-8 border-r-8 border-t-8 border-l-transparent border-r-transparent border-t-kola-cream",
+  right: "left-0 top-1/2 -translate-y-1/2 -translate-x-full border-t-8 border-b-8 border-r-8 border-t-transparent border-b-transparent border-r-kola-cream",
+  bottom: "top-0 left-1/2 -translate-x-1/2 -translate-y-full border-l-8 border-r-8 border-b-8 border-l-transparent border-r-transparent border-b-kola-cream",
+  left: "right-0 top-1/2 -translate-y-1/2 translate-x-full border-t-8 border-b-8 border-l-8 border-t-transparent border-b-transparent border-l-kola-cream",
 };
 
 export function SpeechBubble({
@@ -44,7 +44,7 @@ export function SpeechBubble({
           }}
           className={`absolute z-10 ${positionClasses[position]} ${className}`}
         >
-          <div className="relative bg-fresh-cream text-fresh-dark px-4 py-2 rounded-2xl shadow-lg border-2 border-fresh-sage">
+          <div className="relative bg-kola-cream text-kola-deep px-4 py-2 rounded-2xl shadow-lg border-2 border-kola-accent">
             <span className="text-sm font-medium whitespace-nowrap">{children}</span>
             <div className={`absolute w-0 h-0 ${tailClasses[position]}`} />
           </div>

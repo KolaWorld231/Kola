@@ -8,7 +8,7 @@ import { prisma } from "@/lib/prisma";
  */
 export async function GET(
   request: Request,
-  { params }: { params: Promise<{ lessonId: string }> }
+  { params }: { params: Promise<{ "lesson-id": string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -19,7 +19,7 @@ export async function GET(
 
     const resolvedParams = await params;
     const story = await prisma.story.findUnique({
-      where: { lessonId: resolvedParams.lessonId },
+      where: { lessonId: resolvedParams["lesson-id"] },
       include: {
         lesson: {
           select: {

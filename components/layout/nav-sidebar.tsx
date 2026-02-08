@@ -45,7 +45,7 @@ export function NavSidebar() {
         <div className="p-6 border-b border-gray-200 dark:border-border-darkMode">
           <Link href="/dashboard" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
             <Logo size="md" />
-            <span className="text-xl font-bold text-liberian-red dark:text-liberian-red">Volo</span>
+            <span className="text-xl font-bold text-liberian-red dark:text-liberian-red">Kola</span>
           </Link>
         </div>
 
@@ -78,7 +78,7 @@ export function NavSidebar() {
         {/* Bottom Section */}
         <div className="p-4 border-t border-gray-200 dark:border-border-darkMode">
           <div className="text-xs text-gray-500 dark:text-foreground-darkModeLight text-center">
-            <p>🇱🇷 Volo</p>
+            <p>🇱🇷 Kola</p>
             <p className="mt-1">Learn Liberian Languages</p>
           </div>
         </div>

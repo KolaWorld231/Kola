@@ -7,7 +7,7 @@ import { AnimatedProgressBar } from "@/components/gamification/AnimatedProgressB
 import { sounds } from "@/lib/sounds";
 import type { LessonProgress } from "@/types/gamification";
 
-interface LessonCardProps extends LessonProgress {
+export interface LessonCardProps extends LessonProgress {
   onClick?: () => void;
   className?: string;
 }
@@ -50,15 +50,15 @@ export function LessonCard({
       className={`
         relative overflow-hidden rounded-2xl
         ${isLocked 
-          ? "bg-fresh-sage/30 cursor-not-allowed" 
-          : "bg-fresh-cream cursor-pointer"
+          ? "bg-kola-accent/30 cursor-not-allowed" 
+          : "bg-kola-cream cursor-pointer"
         }
         border-2 
         ${isComplete 
-          ? "border-fresh-green" 
+          ? "border-kola-accent" 
           : isLocked 
-            ? "border-fresh-sage/50" 
-            : "border-fresh-sage"
+            ? "border-kola-accent/50" 
+            : "border-kola-accent"
         }
         shadow-md
         ${className}
@@ -78,7 +78,7 @@ export function LessonCard({
       {/* Ripple effect */}
       {ripple && (
         <motion.div
-          className="absolute rounded-full bg-fresh-blue/20 pointer-events-none"
+          className="absolute rounded-full bg-kola-primary/20 pointer-events-none"
           style={{
             left: ripple.x,
             top: ripple.y,
@@ -103,10 +103,10 @@ export function LessonCard({
             className={`
               w-14 h-14 rounded-xl flex items-center justify-center
               ${isComplete 
-                ? "bg-fresh-green/20" 
+                ? "bg-kola-accent/20" 
                 : isLocked 
-                  ? "bg-fresh-sage/50" 
-                  : "bg-fresh-blue/20"
+                  ? "bg-kola-accent/50" 
+                  : "bg-kola-primary/20"
               }
             `}
             animate={isHovered && !isLocked ? { 
@@ -116,11 +116,11 @@ export function LessonCard({
             transition={{ duration: 0.5 }}
           >
             {isComplete ? (
-              <Check className="text-fresh-green" size={28} />
+              <Check className="text-kola-accent" size={28} />
             ) : isLocked ? (
-              <Lock className="text-fresh-brown/50" size={24} />
+              <Lock className="text-kola-bronze/50" size={24} />
             ) : (
-              <BookOpen className="text-fresh-blue" size={24} />
+              <BookOpen className="text-kola-primary" size={24} />
             )}
           </motion.div>
 
@@ -129,7 +129,7 @@ export function LessonCard({
             <h3 
               className={`
                 font-bold text-lg truncate
-                ${isLocked ? "text-fresh-brown/50" : "text-fresh-dark"}
+                ${isLocked ? "text-kola-bronze/50" : "text-kola-deep"}
               `}
             >
               {title}
@@ -137,7 +137,7 @@ export function LessonCard({
             <p 
               className={`
                 text-sm mt-0.5 line-clamp-2
-                ${isLocked ? "text-fresh-brown/40" : "text-fresh-brown"}
+                ${isLocked ? "text-kola-bronze/40" : "text-kola-bronze"}
               `}
             >
               {description}
@@ -184,7 +184,7 @@ export function LessonCard({
         {/* Complete badge */}
         {isComplete && (
           <motion.div
-            className="absolute top-0 right-0 bg-fresh-green text-white text-xs font-bold px-3 py-1 rounded-bl-xl rounded-tr-xl"
+            className="absolute top-0 right-0 bg-kola-accent text-white text-xs font-bold px-3 py-1 rounded-bl-xl rounded-tr-xl"
             initial={{ x: 50 }}
             animate={{ x: 0 }}
             transition={{ type: "spring", stiffness: 300 }}
@@ -195,7 +195,7 @@ export function LessonCard({
 
         {/* Locked overlay */}
         {isLocked && (
-          <div className="absolute inset-0 bg-gradient-to-t from-fresh-sage/50 to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-t from-kola-accent/50 to-transparent pointer-events-none" />
         )}
 
         {/* Hover glow */}

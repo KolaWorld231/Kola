@@ -1,3 +1,3 @@
 // Loading components barrel export
-export { VoloLoader } from "./VoloLoader";
+export { KolaLoader } from "./KolaLoader";
 export { PageTransition } from "./PageTransition";

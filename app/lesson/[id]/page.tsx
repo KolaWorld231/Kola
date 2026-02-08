@@ -190,7 +190,7 @@ export default function LessonPage() {
   useEffect(() => {
     if (lesson?.type === "story" && !hasReadStory && !storyData && !loadingStory && lessonId) {
       setLoadingStory(true);
-      fetch(`/api/stories/${lessonId}`)
+      fetch(`/api/lessons/${lessonId}/story`)
         .then((res) => res.json())
         .then((data) => {
           if (data.story) {
@@ -236,9 +236,13 @@ export default function LessonPage() {
         if (data.heartsRemaining !== undefined) {
           setHearts(data.heartsRemaining);
         }
-        // Show achievement notifications
+        // Show achievement notifications, but prevent duplicates
         if (data.achievements && data.achievements.length > 0) {
-          setUnlockedAchievements((prev) => [...prev, ...data.achievements]);
+          setUnlockedAchievements((prev) => {
+            const existingIds = new Set(prev.map(a => a.id));
+            const newAchievements = data.achievements.filter((a: { id: string }) => !existingIds.has(a.id));
+            return [...prev, ...newAchievements];
+          });
         }
       }
     } catch (error) {

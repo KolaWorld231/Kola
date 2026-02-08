@@ -21,7 +21,10 @@ export async function GET(request: Request) {
       // Send initial connection message
       const send = (data: string) => {
         try {
-          controller.enqueue(encoder.encode(`data: ${data}\n\n`));
+          // Check if controller is still open before sending
+          if (controller.desiredSize !== null && controller.desiredSize >= 0) {
+            controller.enqueue(encoder.encode(`data: ${data}\n\n`));
+          }
         } catch (error) {
           console.error("Error sending SSE data:", error);
         }
@@ -41,26 +44,32 @@ export async function GET(request: Request) {
         }
       }, 5000);
 
+      // Keep connection alive with periodic ping
+      const keepAliveInterval = setInterval(() => {
+        try {
+          send(JSON.stringify({ type: "ping", timestamp: new Date().toISOString() }));
+        } catch (error) {
+          // Controller might be closed, clean up intervals
+          clearInterval(keepAliveInterval);
+          clearInterval(pollInterval);
+          try {
+            controller.close();
+          } catch (closeError) {
+            // Stream might already be closed
+          }
+        }
+      }, 30000); // Every 30 seconds
+
       // Cleanup on client disconnect
       request.signal.addEventListener("abort", () => {
         clearInterval(pollInterval);
+        clearInterval(keepAliveInterval);
         try {
           controller.close();
         } catch (error) {
           // Stream might already be closed
         }
       });
-
-      // Keep connection alive with periodic ping
-      const keepAliveInterval = setInterval(() => {
-        try {
-          send(JSON.stringify({ type: "ping", timestamp: new Date().toISOString() }));
-        } catch (error) {
-          clearInterval(keepAliveInterval);
-          clearInterval(pollInterval);
-          controller.close();
-        }
-      }, 30000); // Every 30 seconds
     },
   });
 

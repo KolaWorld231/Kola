@@ -7,6 +7,8 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Flame, Award, Heart, Trophy, TrendingUp, BookOpen, Lightbulb, Mic, Gift, ShoppingBag, Settings } from "lucide-react";
 import { StatsCard } from "@/components/dashboard/stats-card";
+import { AnimatedStatsCards } from "@/components/dashboard/animated-stats-cards";
+import { MascotGreeting } from "@/components/dashboard/mascot-greeting";
 import { DailyGoal } from "@/components/dashboard/daily-goal";
 import { ProgressChart } from "@/components/dashboard/progress-chart";
 import { RecentActivity } from "@/components/dashboard/recent-activity";
@@ -238,54 +240,28 @@ export default async function DashboardPage() {
 
   return (
     <DashboardClient>
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-kola-cream">
       <div className="container mx-auto px-6 py-8">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-primary mb-2">
-            Welcome back, {user.name || "Learner"}! 🇱🇷
-          </h1>
-          <p className="text-lg text-foreground-light">
-            Continue your Liberian language learning journey
-          </p>
+        {/* Mascot Greeting */}
+        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8 mb-12">
+          <div className="flex-1">
+            <h1 className="text-4xl font-bold text-kola-deep mb-2">
+              Welcome back, {user.name || "Learner"}! 🇱🇷
+            </h1>
+            <p className="text-lg text-kola-bronze">
+              Continue your Liberian language learning journey
+            </p>
+          </div>
         </div>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          <StatsCard
-            title="Total XP"
-            value={user.totalXP.toLocaleString()}
-            description="Keep learning to earn more!"
-            icon={TrendingUp}
-            iconColor="text-secondary"
-          />
-          <StatsCard
-            title="Current Streak"
-            value={`${user.currentStreak} 🔥`}
-            description={
-              needsStreakUpdate
-                ? "Complete a lesson to maintain your streak!"
-                : "Great job! Keep it up!"
-            }
-            icon={Flame}
-            iconColor="text-primary"
-          />
-          <StatsCard
-            title="Hearts"
-            value={"❤️".repeat(Math.min(user.hearts, 5)) + (user.hearts > 5 ? `+${user.hearts - 5}` : "")}
-            description={
-              user.hearts === 5
-                ? "Full hearts! Ready to learn"
-                : `${Math.max(0, 5 - user.hearts)} hearts remaining`
-            }
-            icon={Heart}
-            iconColor="text-destructive"
-          />
-          <StatsCard
-            title="Achievements"
-            value={user.achievements.length}
-            description="Unlocked achievements"
-            icon={Award}
-            iconColor="text-accent"
+        {/* Animated Stats Cards */}
+        <div className="mb-8">
+          <AnimatedStatsCards
+            xp={user.totalXP}
+            hearts={user.hearts}
+            maxHearts={5}
+            streak={user.currentStreak}
+            level={Math.floor(user.totalXP / 500) + 1}
           />
         </div>
 
@@ -456,7 +432,7 @@ export default async function DashboardPage() {
           <Card>
             <CardHeader>
               <CardTitle className="text-lg">Explore More</CardTitle>
-              <CardDescription>Discover all Volo features</CardDescription>
+              <CardDescription>Discover all Kola features</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">

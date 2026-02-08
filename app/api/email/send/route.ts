@@ -66,15 +66,15 @@ export async function POST(request: Request) {
     switch (type) {
       case "product-updates":
         html = productUpdatesTemplate({ userName: user.name || undefined, ...data });
-        subject = "New Features & Learning Tips from Volo";
+        subject = "New Features & Learning Tips from Kola";
         break;
       case "new-follower":
         html = newFollowerTemplate({ userName: user.name || undefined, ...data });
-        subject = "New Follower on Volo";
+        subject = "New Follower on Kola";
         break;
       case "friend-activity":
         html = friendActivityTemplate({ userName: user.name || undefined, ...data });
-        subject = "Friend Activity on Volo";
+        subject = "Friend Activity on Kola";
         break;
       case "weekly-progress":
         html = weeklyProgressTemplate({ userName: user.name || undefined, ...data });
@@ -82,15 +82,15 @@ export async function POST(request: Request) {
         break;
       case "special-promotions":
         html = specialPromotionsTemplate({ userName: user.name || undefined, ...data });
-        subject = data.promotionTitle || "Special Offer from Volo";
+        subject = data.promotionTitle || "Special Offer from Kola";
         break;
       case "research-opportunities":
         html = researchOpportunitiesTemplate({ userName: user.name || undefined, ...data });
-        subject = "Research Opportunity - Volo";
+        subject = "Research Opportunity - Kola";
         break;
       case "practice-reminder":
         html = practiceReminderTemplate({ userName: user.name || undefined, ...data });
-        subject = "Time to Practice - Volo";
+        subject = "Time to Practice - Kola";
         break;
       default:
         return NextResponse.json(

@@ -54,7 +54,7 @@ function validateUsernameFormat(username: string): { valid: boolean; error?: str
     "system",
     "null",
     "undefined",
-    "volo",
+    "kola",
   ];
   if (reservedUsernames.includes(username.toLowerCase())) {
     return { valid: false, error: "This username is reserved" };
@@ -94,7 +94,6 @@ export async function GET(request: Request) {
       where: {
         username: {
           equals: username,
-          mode: "insensitive", // Case-insensitive check
         },
       },
       select: {

@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { ProgressBar } from "@/components/ui/progress-bar";
-import { Trophy, Flame, TrendingUp, TrendingDown, Minus, BookOpen } from "lucide-react";
+import { Trophy, Flame, TrendingUp, TrendingDown, Minus, BookOpen, Award } from "lucide-react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 

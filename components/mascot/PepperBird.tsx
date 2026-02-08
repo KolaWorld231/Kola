@@ -1,12 +1,14 @@
 "use client";
 
 import { motion, type Variants } from "framer-motion";
+import { useState, useRef, useEffect } from "react";
 import type { MascotMood } from "@/types/gamification";
 
 interface PepperBirdProps {
   mood?: MascotMood;
   size?: "sm" | "md" | "lg" | "xl";
   className?: string;
+  interactive?: boolean;
 }
 
 const sizeClasses = {
@@ -84,14 +86,63 @@ const getEyeVariants = (mood: MascotMood) => {
   }
 };
 
-export function PepperBird({ mood = "happy", size = "md", className = "" }: PepperBirdProps) {
+export function PepperBird({ mood = "happy", size = "md", className = "", interactive = false }: PepperBirdProps) {
   const eyeVariants = getEyeVariants(mood);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isHovering, setIsHovering] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  
+  // Track mouse movement for interactive response
+  useEffect(() => {
+    if (!interactive) return;
+    
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!containerRef.current) return;
+      
+      const rect = containerRef.current.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      
+      // Calculate angle towards mouse
+      const angle = Math.atan2(e.clientY - centerY, e.clientX - centerX);
+      const distance = Math.hypot(e.clientX - centerX, e.clientY - centerY);
+      
+      // Max distance for effect (viewport diagonal)
+      const maxDistance = Math.hypot(window.innerWidth, window.innerHeight);
+      const influence = Math.min(distance / maxDistance, 0.5);
+      
+      // Move bird slightly towards mouse
+      const moveX = Math.cos(angle) * 15 * influence;
+      const moveY = Math.sin(angle) * 15 * influence;
+      
+      setMousePosition({ x: moveX, y: moveY });
+    };
+    
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, [interactive]);
+  
+  // Reset position when not hovering (on desktop) or on mobile
+  const handleMouseEnter = () => setIsHovering(true);
+  const handleMouseLeave = () => {
+    setIsHovering(false);
+    setMousePosition({ x: 0, y: 0 });
+  };
   
   return (
     <motion.div
-      className={`${sizeClasses[size]} ${className}`}
+      ref={containerRef}
+      className={`${sizeClasses[size]} ${className} cursor-pointer`}
       variants={moodAnimations[mood]}
       animate="animate"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      whileHover={interactive && isHovering ? { scale: 1.1 } : {}}
+      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+      style={interactive && isHovering ? { 
+        x: mousePosition.x, 
+        y: mousePosition.y 
+      } : {}}
     >
       <svg
         viewBox="0 0 100 100"

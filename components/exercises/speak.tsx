@@ -282,7 +282,7 @@ export function SpeakExercise({
                             ? "default"
                             : pronunciationScore >= 70
                             ? "warning"
-                            : "destructive"
+                            : "danger"
                         }
                         className="h-2"
                       />

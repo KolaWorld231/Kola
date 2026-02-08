@@ -130,7 +130,7 @@ export async function GET(_request: Request) {
     return NextResponse.json(exportData, {
       headers: {
         "Content-Type": "application/json",
-        "Content-Disposition": `attachment; filename="volo-data-export-${Date.now()}.json"`,
+        "Content-Disposition": `attachment; filename="kola-data-export-${Date.now()}.json"`,
       },
     });
   } catch (error) {

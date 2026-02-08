@@ -33,8 +33,8 @@ export function SoundProvider({ children }: SoundProviderProps) {
   // Preload sounds on mount
   useEffect(() => {
     // Check for user preference
-    const savedVolume = localStorage.getItem("volo-sound-volume");
-    const savedMuted = localStorage.getItem("volo-sound-muted");
+    const savedVolume = localStorage.getItem("kola-sound-volume");
+    const savedMuted = localStorage.getItem("kola-sound-muted");
 
     if (savedVolume) {
       const vol = parseFloat(savedVolume);
@@ -58,13 +58,13 @@ export function SoundProvider({ children }: SoundProviderProps) {
   const handleSetVolume = (newVolume: number) => {
     setVolumeState(newVolume);
     setVolume(newVolume);
-    localStorage.setItem("volo-sound-volume", String(newVolume));
+    localStorage.setItem("kola-sound-volume", String(newVolume));
   };
 
   const handleToggleMute = () => {
     const newMuted = toggleMute();
     setIsMutedState(newMuted);
-    localStorage.setItem("volo-sound-muted", String(newMuted));
+    localStorage.setItem("kola-sound-muted", String(newMuted));
   };
 
   return (

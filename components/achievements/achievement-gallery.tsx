@@ -69,7 +69,7 @@ export function AchievementGallery({ userId }: AchievementGalleryProps) {
     }
   };
 
-  const getCategoryIcon = (category: string) => {
+  const getCategoryIcon = (category: CategoryFilter) => {
     switch (category) {
       case "lesson":
         return <BookOpen className="h-4 w-4" />;
@@ -84,7 +84,7 @@ export function AchievementGallery({ userId }: AchievementGalleryProps) {
     }
   };
 
-  const getCategoryLabel = (category: string) => {
+  const getCategoryLabel = (category: CategoryFilter) => {
     switch (category) {
       case "lesson":
         return "Lessons";

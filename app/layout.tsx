@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Fredoka } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/providers";
 import { Header } from "@/components/header";
@@ -8,12 +8,19 @@ import { Toaster } from "@/components/ui/toast";
 import { ErrorBoundary } from "@/components/ui/error-boundary";
 import { WebVitalsTracker } from "@/components/monitoring/web-vitals";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const fredoka = Fredoka({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  variable: "--font-fredoka",
+});
 
 export const metadata: Metadata = {
-  title: "Volo - Learn Liberian Languages",
+  title: "Kola - Learn Liberian Languages",
   description: "Learn Liberian local languages through interactive lessons, stories, and exercises",
   manifest: "/manifest.json",
+};
+
+export const viewport: Viewport = {
   themeColor: "#000000",
 };
 
@@ -24,7 +31,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} font-sans antialiased`}>
+      <body className={`${fredoka.variable} font-sans antialiased`}>
         <Providers>
           <ErrorBoundary>
             <WebVitalsTracker />

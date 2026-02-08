@@ -31,7 +31,7 @@ export function StreakFire({
     <motion.div
       className={`
         inline-flex items-center gap-1.5 rounded-full
-        ${isActive ? "bg-orange-500/10" : "bg-fresh-sage/30"}
+        ${isActive ? "bg-orange-500/10" : "bg-kola-accent/30"}
         ${styles.padding}
         ${className}
       `}
@@ -57,7 +57,7 @@ export function StreakFire({
       >
         <Flame
           size={styles.icon}
-          className={isActive ? "text-orange-500 fill-orange-400" : "text-fresh-sage"}
+          className={isActive ? "text-orange-500 fill-orange-400" : "text-kola-accent"}
         />
         
         {/* Fire glow effect */}
@@ -79,7 +79,7 @@ export function StreakFire({
 
       <motion.span
         className={`font-bold ${styles.text} ${
-          isActive ? "text-orange-600" : "text-fresh-brown/50"
+          isActive ? "text-orange-600" : "text-kola-bronze/50"
         }`}
         animate={isActive ? { scale: [1, 1.05, 1] } : {}}
         transition={{ duration: 1, repeat: Infinity, delay: 0.2 }}
@@ -90,7 +90,7 @@ export function StreakFire({
       {showLabel && (
         <span
           className={`${styles.text} ${
-            isActive ? "text-orange-500/80" : "text-fresh-brown/40"
+            isActive ? "text-orange-500/80" : "text-kola-bronze/40"
           } font-medium`}
         >
           {days === 1 ? "day" : "days"}

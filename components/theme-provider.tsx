@@ -43,7 +43,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       defaultTheme="system"
       enableSystem
       disableTransitionOnChange
-      storageKey="volo-theme"
+      storageKey="kola-theme"
     >
       <ThemeSync>{children}</ThemeSync>
     </NextThemesProvider>

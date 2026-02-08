@@ -3,13 +3,16 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { LucideIcon } from "lucide-react";
+import type { Dispatch, SetStateAction } from "react";
+
+type CategoryFilter = "all" | "lesson" | "streak" | "exercise" | "special";
 
 interface AchievementCategoryFilterProps {
-  categories: string[];
-  selectedCategory: string;
-  onCategoryChange: (category: string) => void;
-  getCategoryIcon: (category: string) => JSX.Element;
-  getCategoryLabel: (category: string) => string;
+  categories: CategoryFilter[];
+  selectedCategory: CategoryFilter;
+  onCategoryChange: Dispatch<SetStateAction<CategoryFilter>>;
+  getCategoryIcon: (category: CategoryFilter) => JSX.Element;
+  getCategoryLabel: (category: CategoryFilter) => string;
 }
 
 export function AchievementCategoryFilter({

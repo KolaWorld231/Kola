@@ -17,22 +17,22 @@ interface AnimatedProgressBarProps {
 
 const variantStyles = {
   default: {
-    track: "bg-fresh-sage/50",
-    bar: "bg-fresh-blue",
+    track: "bg-kola-accent/50",
+    bar: "bg-kola-primary",
     shimmer: "from-transparent via-white/30 to-transparent",
   },
   success: {
-    track: "bg-fresh-sage/50",
-    bar: "bg-fresh-green",
+    track: "bg-kola-accent/50",
+    bar: "bg-kola-accent",
     shimmer: "from-transparent via-white/30 to-transparent",
   },
   xp: {
-    track: "bg-fresh-sage/50",
-    bar: "bg-gradient-to-r from-fresh-green to-fresh-blue",
+    track: "bg-kola-accent/50",
+    bar: "bg-gradient-to-r from-kola-accent to-kola-primary",
     shimmer: "from-transparent via-white/40 to-transparent",
   },
   lesson: {
-    track: "bg-fresh-sage/50",
+    track: "bg-kola-accent/50",
     bar: "bg-gradient-to-r from-primary to-primary-light",
     shimmer: "from-transparent via-white/30 to-transparent",
   },
@@ -63,10 +63,10 @@ export function AnimatedProgressBar({
       {(showLabel || showPercentage) && (
         <div className="mb-1.5 flex items-center justify-between">
           {showLabel && label && (
-            <span className="text-sm font-medium text-fresh-dark">{label}</span>
+            <span className="text-sm font-medium text-kola-deep">{label}</span>
           )}
           {showPercentage && (
-            <span className="text-sm font-medium text-fresh-brown">
+            <span className="text-sm font-medium text-kola-bronze">
               {Math.round(percentage)}%
             </span>
           )}

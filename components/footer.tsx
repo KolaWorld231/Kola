@@ -59,7 +59,7 @@ export function Footer() {
             <ul className="space-y-2 text-sm text-foreground-light">
               <li>
                 <Link href="/about" className="hover:text-primary transition-colors">
-                  About Volo
+                  About Kola
                 </Link>
               </li>
               <li>
@@ -72,7 +72,7 @@ export function Footer() {
         </div>
 
         <div className="mt-8 pt-8 border-t border-border text-center text-sm text-foreground-light">
-          <p>&copy; {new Date().getFullYear()} Volo. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} Kola. All rights reserved.</p>
           <p className="mt-2">Made with ❤️ for preserving Liberian languages 🇱🇷</p>
         </div>
       </div>

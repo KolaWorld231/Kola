@@ -1,4 +1,5 @@
-// Mascot components barrel export
+// Export all mascot components
 export { PepperBird } from "./PepperBird";
-export { MascotReactions } from "./MascotReactions";
-export { SpeechBubble } from "./SpeechBubble";
+export { MascotReactions, useMascotReactions } from "./MascotReactions";
+
+export type { MascotMood } from "@/types/gamification";

@@ -311,7 +311,7 @@ export default function OnboardingPage() {
         <div className="mb-8 text-center">
           <Logo className="mx-auto mb-4" />
           <h1 className="text-3xl font-bold text-liberian-red mb-2">
-            Welcome to Volo! 🇱🇷
+            Welcome to Kola! 🇱🇷
           </h1>
           <p className="text-gray-600 dark:text-foreground-darkModeLight">
             Let's personalize your learning experience

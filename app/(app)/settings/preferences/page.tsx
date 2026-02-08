@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { SoundSettings } from "@/components/settings/sound-settings";
 import { toast } from "sonner";
 
 interface UserSettings {
@@ -184,6 +185,14 @@ export default function PreferencesPage() {
             </SelectContent>
           </Select>
         </div>
+      </div>
+
+      {/* Sound Settings Section */}
+      <div className="space-y-4 pt-6 border-t border-gray-200 dark:border-border-darkMode">
+        <div>
+          <h2 className="text-lg font-bold text-gray-900 dark:text-foreground-darkMode mb-4">Sound Settings</h2>
+        </div>
+        <SoundSettings />
       </div>
 
       {/* Save Button */}

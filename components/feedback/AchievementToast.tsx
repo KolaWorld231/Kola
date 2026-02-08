@@ -34,7 +34,7 @@ const achievementConfig: Record<
 > = {
   lesson_complete: {
     icon: Target,
-    gradient: "from-fresh-green to-green-600",
+    gradient: "from-kola-accent to-green-600",
     iconColor: "text-white",
   },
   streak: {
@@ -54,7 +54,7 @@ const achievementConfig: Record<
   },
   first_lesson: {
     icon: Medal,
-    gradient: "from-fresh-blue to-blue-600",
+    gradient: "from-kola-primary to-blue-600",
     iconColor: "text-white",
   },
   milestone: {
@@ -108,7 +108,7 @@ export function AchievementToast({
             ${className}
           `}
         >
-          <div className="relative overflow-hidden rounded-2xl bg-fresh-cream shadow-2xl border border-fresh-sage">
+          <div className="relative overflow-hidden rounded-2xl bg-kola-cream shadow-2xl border border-kola-accent">
             {/* Gradient header */}
             <div className={`bg-gradient-to-r ${config.gradient} px-6 py-3`}>
               <div className="flex items-center gap-3">
@@ -156,7 +156,7 @@ export function AchievementToast({
                 transition={{ delay: 0.5 }}
                 className="px-6 py-3"
               >
-                <p className="text-fresh-brown text-sm">{description}</p>
+                <p className="text-kola-bronze text-sm">{description}</p>
               </motion.div>
             )}
 

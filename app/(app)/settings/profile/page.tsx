@@ -509,7 +509,7 @@ export default function ProfilePage() {
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement("a");
                     a.href = url;
-                    a.download = `volo-data-export-${Date.now()}.json`;
+                    a.download = `kola-data-export-${Date.now()}.json`;
                     document.body.appendChild(a);
                     a.click();
                     document.body.removeChild(a);
