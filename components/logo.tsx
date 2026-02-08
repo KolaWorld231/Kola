@@ -24,28 +24,29 @@ const textSizeClasses = {
 export function Logo({ className, size = "md", showText = true }: LogoProps) {
   return (
     <div className={cn("flex items-center gap-2", className)}>
-      {/* Volo Text with Bird Above Second 'o' */}
+      {/* Kola Text with Bird Above Second 'o' */}
       {showText ? (
         <div className="relative inline-flex items-baseline">
           <span
             className={cn(
-              "font-bold tracking-tight text-primary relative inline-flex items-baseline",
+              "font-bold tracking-tight text-kola-deep relative inline-flex items-baseline",
               textSizeClasses[size]
             )}
           >
-            Vo
+            Ko
             <span className="relative inline-block">
               l
               <span className="relative inline-block">
-                o
-                {/* Bird positioned above the second 'o' */}
-                <span className={cn(
-                  "absolute left-1/2 -translate-x-1/2 z-10 pointer-events-none",
-                  size === "sm" && "scale-75 -top-4",
-                  size === "md" && "scale-90 -top-5",
-                  size === "lg" && "-top-7",
-                  size === "xl" && "-top-8 scale-110"
-                )}>
+                a{/* Bird positioned above the second 'o' */}
+                <span
+                  className={cn(
+                    "absolute left-1/2 -translate-x-1/2 z-10 pointer-events-none",
+                    size === "sm" && "scale-75 -top-4",
+                    size === "md" && "scale-90 -top-5",
+                    size === "lg" && "-top-7",
+                    size === "xl" && "-top-8 scale-110"
+                  )}
+                >
                   <svg
                     viewBox="0 0 32 32"
                     fill="none"
@@ -53,20 +54,24 @@ export function Logo({ className, size = "md", showText = true }: LogoProps) {
                     className={cn("block", sizeClasses[size])}
                     aria-hidden="true"
                   >
-                    {/* Bird Body - Blue, rounded */}
-                    <ellipse cx="16" cy="18" rx="8" ry="6" fill="#1B3F91" className="fill-secondary" />
-                    {/* Bird Head - Blue, circular */}
-                    <circle cx="10" cy="16" r="5" fill="#1B3F91" className="fill-secondary" />
-                    {/* Bird Beak - Red, pointing right */}
-                    <path
-                      d="M14 16 L18 17 L14 18 Z"
-                      fill="#D63A3A"
-                      className="fill-primary"
-                    />
+                    {/* Bird Body - Kola Primary Teal */}
+                    <ellipse cx="16" cy="18" rx="8" ry="6" fill="#58A8A8" />
+                    {/* Bird Head - Kola Primary Teal */}
+                    <circle cx="10" cy="16" r="5" fill="#58A8A8" />
+                    {/* Bird Beak - Warm Bronze */}
+                    <path d="M14 16 L18 17 L14 18 Z" fill="#884828" />
                     {/* Bird Eye - White dot */}
                     <circle cx="11" cy="15" r="1.2" fill="#FFFFFF" />
-                    {/* Bird Wing - slightly raised for flying effect */}
-                    <ellipse cx="14" cy="17" rx="3" ry="4" fill="#2A56B8" className="fill-secondary-light opacity-70" transform="rotate(-20 14 17)" />
+                    {/* Bird Wing - Kola Accent Green (subtle) */}
+                    <ellipse
+                      cx="14"
+                      cy="17"
+                      rx="3"
+                      ry="4"
+                      fill="#48A898"
+                      opacity="0.85"
+                      transform="rotate(-20 14 17)"
+                    />
                   </svg>
                 </span>
               </span>
@@ -83,20 +88,24 @@ export function Logo({ className, size = "md", showText = true }: LogoProps) {
             className="w-full h-full"
             aria-hidden="true"
           >
-            {/* Bird Body - Blue, rounded */}
-            <ellipse cx="16" cy="18" rx="8" ry="6" fill="#1B3F91" className="fill-secondary" />
-            {/* Bird Head - Blue, circular */}
-            <circle cx="10" cy="16" r="5" fill="#1B3F91" className="fill-secondary" />
-            {/* Bird Beak - Red, pointing right */}
-            <path
-              d="M14 16 L18 17 L14 18 Z"
-              fill="#D63A3A"
-              className="fill-primary"
-            />
+            {/* Bird Body - Kola Primary Teal */}
+            <ellipse cx="16" cy="18" rx="8" ry="6" fill="#58A8A8" />
+            {/* Bird Head - Kola Primary Teal */}
+            <circle cx="10" cy="16" r="5" fill="#58A8A8" />
+            {/* Bird Beak - Warm Bronze */}
+            <path d="M14 16 L18 17 L14 18 Z" fill="#884828" />
             {/* Bird Eye - White dot */}
             <circle cx="11" cy="15" r="1.2" fill="#FFFFFF" />
-            {/* Bird Wing - slightly raised for flying effect */}
-            <ellipse cx="14" cy="17" rx="3" ry="4" fill="#2A56B8" className="fill-secondary-light opacity-70" transform="rotate(-20 14 17)" />
+            {/* Bird Wing - Kola Accent Green (subtle) */}
+            <ellipse
+              cx="14"
+              cy="17"
+              rx="3"
+              ry="4"
+              fill="#48A898"
+              opacity="0.85"
+              transform="rotate(-20 14 17)"
+            />
           </svg>
         </div>
       )}
@@ -108,4 +117,3 @@ export function Logo({ className, size = "md", showText = true }: LogoProps) {
 export function BirdIcon({ className, size = "md" }: Omit<LogoProps, "showText">) {
   return <Logo className={className} size={size} showText={false} />;
 }
-

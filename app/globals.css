@@ -27,12 +27,12 @@
     --radius: 0.5rem;
 
     /* Joyful Palette Tokens */
-    --fresh-dark: #0f172a;
-    --fresh-taupe: #fff7ed;
-    --fresh-sage: #4ade80;
-    --fresh-blue: #2dd4bf;
+    --fresh-dark: #183818; /* mapped to Kola Deep Leaf */
+    --fresh-taupe: #f6efea;
+    --fresh-sage: #48a898; /* mapped to Kola Accent Green */
+    --fresh-blue: #58a8a8; /* mapped to Kola Primary Teal */
     --fresh-gray: #e5e7eb;
-    --fresh-cream: #fff7ed;
+    --fresh-cream: #f6efea;
   }
 
   /* Kola Brand Tokens */
