@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { fromDBCriteria, AchievementCriteria } from "@/lib/json-fields";
 
 interface AchievementCheckResult {
   unlocked: boolean;
@@ -104,11 +105,14 @@ export async function checkAndUnlockAchievements(
       default:
         // Handle custom criteria from JSON
         if (achievement.criteria) {
-          shouldUnlock = await checkCustomCriteria(
-            userId,
-            achievement.criteria as Record<string, unknown>,
-            context
-          );
+          const parsedCriteria = fromDBCriteria(achievement.criteria);
+          if (parsedCriteria) {
+            shouldUnlock = await checkCustomCriteria(
+              userId,
+              parsedCriteria,
+              context
+            );
+          }
         }
     }
 
@@ -163,7 +167,7 @@ export async function checkAndUnlockAchievements(
  */
 async function checkCustomCriteria(
   _userId: string,
-  _criteria: Record<string, unknown>,
+  _criteria: AchievementCriteria,
   _context: {
     type: string;
     data?: Record<string, unknown>;
