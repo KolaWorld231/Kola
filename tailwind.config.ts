@@ -70,6 +70,21 @@ const config: Config = {
         "palm-green": "#3A9D5A",
         "sun-gold": "#F3C24F",
         "liberian-gold": "#F3C24F",
+        // Kola Brand Palette Colors
+        kola: {
+          primary: "#4daa9f",
+          bronze: "#f57a58",
+          accent: "#75af56",
+          deep: "#4daa9f",
+          cream: "#f6efea",
+        },
+        "brand": {
+          primary: "#4daa9f",
+          gold: "#eecb57",
+          coral: "#f57a58",
+          green: "#75af56",
+          cream: "#f6efea",
+        },
       },
       fontFamily: {
         sans: ["var(--font-inter)", "Inter", "system-ui", "sans-serif"],
