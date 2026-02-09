@@ -26,21 +26,30 @@
     --ring: #ff6b6b;
     --radius: 0.5rem;
 
-    /* Joyful Palette Tokens */
-    --fresh-dark: #183818; /* mapped to Kola Deep Leaf */
+    /* Brand Palette Tokens */
+    --fresh-dark: #4daa9f; /* mapped to Brand Primary Teal */
     --fresh-taupe: #f6efea;
-    --fresh-sage: #48a898; /* mapped to Kola Accent Green */
-    --fresh-blue: #58a8a8; /* mapped to Kola Primary Teal */
+    --fresh-sage: #75af56; /* mapped to Brand Green */
+    --fresh-blue: #4daa9f; /* mapped to Brand Primary Teal */
     --fresh-gray: #e5e7eb;
     --fresh-cream: #f6efea;
   }
 
-  /* Kola Brand Tokens */
+  /* Brand Color Palette */
   :root {
-    --kola-primary: #58a8a8; /* Primary Teal */
-    --kola-bronze: #884828; /* Warm Bronze */
-    --kola-accent: #48a898; /* Accent Green */
-    --kola-deep: #183818; /* Deep Leaf */
+    --brand-primary: #4daa9f; /* Primary Teal */
+    --brand-gold: #eecb57; /* Warm Gold/Yellow */
+    --brand-coral: #f57a58; /* Coral/Skin Tone */
+    --brand-green: #75af56; /* Green/Skin Tone */
+    --brand-cream: #f6efea; /* soft cream for backgrounds */
+  }
+
+  /* Kola Brand Tokens (mapped to new palette for backward compat) */
+  :root {
+    --kola-primary: #4daa9f; /* Primary Teal */
+    --kola-bronze: #f57a58; /* Coral Skin Tone */
+    --kola-accent: #75af56; /* Green Skin Tone */
+    --kola-deep: #4daa9f; /* Primary Teal */
     --kola-cream: #f6efea; /* soft cream for backgrounds */
   }
 
@@ -88,48 +97,48 @@ body {
   .bg-fresh-gray { background-color: var(--kola-cream); }
   .bg-fresh-cream { background-color: var(--kola-cream); }
 
-  /* ==================== KOLA Brand Utilities ==================== */
+  /* ==================== KOLA Brand Utilities (Updated to New Palette) ==================== */
   .bg-kola-primary {
-    @apply bg-[#58A8A8];
+    @apply bg-[#4daa9f];
   }
   .bg-kola-bronze {
-    @apply bg-[#884828];
+    @apply bg-[#f57a58];
   }
   .bg-kola-accent {
-    @apply bg-[#48A898];
+    @apply bg-[#75af56];
   }
   .bg-kola-deep {
-    @apply bg-[#183818];
+    @apply bg-[#4daa9f];
   }
   .bg-kola-cream {
     @apply bg-[#F6EFEA];
   }
 
   .text-kola-primary {
-    @apply text-[#58A8A8];
+    @apply text-[#4daa9f];
   }
   .text-kola-bronze {
-    @apply text-[#884828];
+    @apply text-[#f57a58];
   }
   .text-kola-accent {
-    @apply text-[#48A898];
+    @apply text-[#75af56];
   }
   .text-kola-deep {
-    @apply text-[#183818];
+    @apply text-[#4daa9f];
   }
 
   .border-kola-primary {
-    @apply border-[#58A8A8];
+    @apply border-[#4daa9f];
   }
   .border-kola-bronze {
-    @apply border-[#884828];
+    @apply border-[#f57a58];
   }
 
   .hover\:bg-kola-primary-hover:hover {
-    background-color: #4a8f8f;
+    background-color: #3d8b7e;
   }
   .hover\:bg-kola-bronze-hover:hover {
-    background-color: #763b21;
+    background-color: #e66843;
   }
 
   .text-fresh-dark {
@@ -168,6 +177,49 @@ body {
   }
   .border-fresh-cream {
     border-color: var(--kola-cream);
+  }
+
+  /* ==================== Brand Color Utilities ==================== */
+  .bg-brand-primary {
+    @apply bg-[#4daa9f];
+  }
+  .bg-brand-gold {
+    @apply bg-[#eecb57];
+  }
+  .bg-brand-coral {
+    @apply bg-[#f57a58];
+  }
+  .bg-brand-green {
+    @apply bg-[#75af56];
+  }
+  .bg-brand-cream {
+    @apply bg-[#f6efea];
+  }
+
+  .text-brand-primary {
+    @apply text-[#4daa9f];
+  }
+  .text-brand-gold {
+    @apply text-[#eecb57];
+  }
+  .text-brand-coral {
+    @apply text-[#f57a58];
+  }
+  .text-brand-green {
+    @apply text-[#75af56];
+  }
+
+  .border-brand-primary {
+    @apply border-[#4daa9f];
+  }
+  .border-brand-gold {
+    @apply border-[#eecb57];
+  }
+  .border-brand-coral {
+    @apply border-[#f57a58];
+  }
+  .border-brand-green {
+    @apply border-[#75af56];
   }
 
   /* Smooth transitions for Duolingo-style animations */
