@@ -73,7 +73,7 @@ export function HeroWithMascot({ userName }: HeroWithMascotProps) {
               <Link href="/auth/signup">
                 <Button
                   size="lg"
-                  className="w-full sm:w-auto bg-kola-primary hover:bg-kola-primary-hover text-white font-semibold"
+                  className="w-full sm:w-auto bg-kola-primary hover:bg-opacity-80 text-white font-semibold transition-all"
                 >
                   GET STARTED
                 </Button>
