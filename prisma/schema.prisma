@@ -398,6 +398,22 @@ model Friend {
   @@map("friends")
 }
 
+model Content {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  title     String
+  body      String   // HTML or Markdown
+  metadata  String?  @map("metadata")
+  locale    String   @default("en")
+  status    String   @default("draft") // draft | published | archived
+  authorId  String?  @map("author_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  author    User?    @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@map("contents")
+}
+
 model Challenge {
   id          String    @id @default(cuid())
   senderId    String    @map("sender_id")
