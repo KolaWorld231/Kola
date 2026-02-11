@@ -7,7 +7,9 @@ const nextConfig = {
   // Enable static export for Capacitor
   // Note: API routes will be skipped during static export
   output: process.env.CAPACITOR_BUILD === 'true' ? 'export' : undefined,
-  trailingSlash: true,
+  // Disable trailing slashes for API routes to work correctly
+  // trailingSlash: true, // Disabled - breaks API route matching
+  trailingSlash: false,
   // Skip generation of pages that use API routes (admin pages)
   // These will be excluded from static export
   generateBuildId: async () => {

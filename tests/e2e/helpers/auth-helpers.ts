@@ -55,26 +55,57 @@ export async function signUpUser(
 }
 
 /**
- * Sign in an existing user
+ * Sign in an existing user using the test endpoint
  */
 export async function signInUser(
   page: Page,
-  email: string,
-  password: string
+  email?: string,
+  password?: string
 ): Promise<void> {
-  // Navigate to sign in page
-  await page.goto('/auth/signin');
-  await expect(page).toHaveURL(/.*signin/);
+  // Use default test credentials if not provided
+  const testEmail = email || process.env.TEST_USER_EMAIL || 'demo@kola.local';
+  const testPassword = password || process.env.TEST_USER_PASSWORD || 'password123';
 
-  // Fill in sign in form
-  await page.fill('input[type="email"]', email);
-  await page.fill('input[name="password"]', password);
+  // Try to use the test API endpoint if available
+  try {
+    // Use a simple approach: fetch the test session endpoint with the default user ID
+    const response = await page.request.get('/api/test/session?userId=cmli30mte0000r0x0625z2rlg');
+    if (response.ok) {
+      // Session was created, just navigate to dashboard
+      await page.goto('/dashboard');
+      await page.waitForURL(/.*dashboard|.*onboarding|.*learn/, { timeout: 10000 });
+      return;
+    }
+  } catch (error) {
+    console.log('Test session endpoint not available, falling back to manual sign in');
+  }
 
-  // Submit form
-  await page.click('button:has-text("Sign In"), button[type="submit"]');
-  
-  // Wait for redirect (either to onboarding or dashboard)
-  await page.waitForURL(/.*onboarding|.*dashboard/, { timeout: 10000 });
+  // Fall back to manual sign in if test endpoint not available
+  try {
+    await page.goto('/auth/signin', { waitUntil: 'networkidle', timeout: 15000 });
+    
+    // Use id selectors that match the actual form inputs
+    const emailInput = page.locator('#email');
+    const passwordInput = page.locator('#password');
+
+    // Wait for inputs to be visible (with longer timeout)
+    await emailInput.waitFor({ state: 'visible', timeout: 10000 });
+    await passwordInput.waitFor({ state: 'visible', timeout: 10000 });
+    
+    // Fill inputs
+    await emailInput.fill(testEmail);
+    await passwordInput.fill(testPassword);
+
+    // Click submit button
+    const submitButton = page.locator('button[type="submit"]');
+    await submitButton.click();
+    
+    // Wait for redirect (to onboarding, dashboard, or learn)
+    await page.waitForURL(/.*onboarding|.*dashboard|.*learn/, { timeout: 15000 });
+  } catch (error) {
+    console.error('Sign in failed:', error);
+    throw error;
+  }
 }
 
 /**

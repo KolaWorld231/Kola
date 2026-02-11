@@ -14,17 +14,35 @@ export const authOptions: NextAuthOptions = {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials) {
+      async authorize(credentials, req) {
+        console.log("[NEXTAUTH] authorize() called with:", { 
+          credentialsKeys: credentials ? Object.keys(credentials) : null,
+          credentialsType: typeof credentials,
+          reqExists: !!req,
+        });
+
         try {
-          console.log("[NEXTAUTH] Authorization attempt:", { email: credentials?.email });
+          console.log("[NEXTAUTH] Authorization attempt:", { 
+            email: credentials?.email,
+            credentialsKeys: credentials ? Object.keys(credentials) : null,
+            credentialsType: typeof credentials,
+            credentialsValue: JSON.stringify(credentials)
+          });
           
           if (!credentials?.email || !credentials?.password) {
-            console.log("[NEXTAUTH] Missing credentials");
+            console.log("[NEXTAUTH] Missing credentials - email:", credentials?.email, "password:", credentials?.password ? "present" : "missing");
             return null;
           }
 
           const normalizedEmail = credentials.email.toLowerCase().trim();
           console.log("[NEXTAUTH] Looking up user:", normalizedEmail);
+
+          try {
+            const dbList = await prisma.$queryRawUnsafe('PRAGMA database_list;');
+            console.log('[NEXTAUTH] PRAGMA database_list:', dbList);
+          } catch (e) {
+            console.log('[NEXTAUTH] PRAGMA database_list error:', e);
+          }
 
           const user = await prisma.user.findUnique({
             where: { email: normalizedEmail },
@@ -60,7 +78,7 @@ export const authOptions: NextAuthOptions = {
           };
         } catch (error) {
           console.error("[NEXTAUTH] Authorization error:", error);
-          throw error;
+          return null;
         }
       },
     }),

@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { PepperBird } from "@/components/mascot";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
@@ -86,10 +85,23 @@ export function HeroWithMascot({ userName }: HeroWithMascotProps) {
             </motion.div>
           </motion.div>
 
-          {/* Right Side - Mascot */}
+          {/* Right Side - Mascot Video */}
           <motion.div className="flex items-center justify-center" variants={itemVariants}>
             <div className="relative w-full max-w-md">
-              <PepperBird mood="happy" size="xl" interactive />
+              <video
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="w-full rounded-lg shadow-2xl"
+                style={{
+                  aspectRatio: "1/1",
+                  objectFit: "cover",
+                }}
+              >
+                <source src="/Assets%20for%20UI/Kola%20design%20assets/Kola%20mascot%201.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
 
               {/* Floating Elements */}
               <motion.div

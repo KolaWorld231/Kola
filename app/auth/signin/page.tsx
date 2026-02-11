@@ -46,14 +46,14 @@ function SignInForm() {
         // - Returning users (completed onboarding) → redirect to dashboard
         // - Layouts will handle redirects if this check fails
         try {
-          // Check if user is admin first - admins should go directly to dashboard
+          // Check if user is admin first - admins should skip onboarding
           const userResponse = await fetch("/api/user/me");
           if (userResponse.ok) {
             const userData = await userResponse.json();
             if (userData.isAdmin) {
-              // Admin user - skip onboarding, go directly to dashboard
-              console.log("[SIGNIN] Admin user detected, redirecting to dashboard");
-              router.push("/dashboard");
+              // Admin user - skip onboarding, go directly to learn page
+              console.log("[SIGNIN] Admin user detected, redirecting to learn");
+              router.push("/learn");
               router.refresh();
               return;
             }
@@ -71,20 +71,20 @@ function SignInForm() {
               router.push("/onboarding");
             } else {
               // Returning user who has completed onboarding
-              console.log("[SIGNIN] Redirecting returning user to dashboard");
-              router.push("/dashboard");
+              console.log("[SIGNIN] Redirecting returning user to learn page");
+              router.push("/learn");
             }
             router.refresh();
           } else {
-            // If check fails, default to dashboard (app layout will redirect to onboarding if needed)
-            console.log("[SIGNIN] Assessment check failed, defaulting to dashboard");
-            router.push("/dashboard");
+            // If check fails, default to learn page (app layout will redirect to onboarding if needed)
+            console.log("[SIGNIN] Assessment check failed, defaulting to learn page");
+            router.push("/learn");
             router.refresh();
           }
         } catch (error) {
           console.error("[SIGNIN] Error checking assessment status:", error);
-          // If check fails, default to dashboard (app layout will redirect to onboarding if needed)
-          router.push("/dashboard");
+          // If check fails, default to learn page (app layout will redirect to onboarding if needed)
+          router.push("/learn");
           router.refresh();
         }
       }

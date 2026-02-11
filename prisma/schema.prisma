@@ -36,6 +36,11 @@ model User {
   achievements           UserAchievement[]
   dailyChallenges        UserDailyChallenge[]
   progress               UserProgress[]
+  userStreaks            UserStreak[]
+  userStats              UserStats?
+  forumPosts             ForumPost[]
+  forumComments          ForumComment[]
+  voiceRecordings        VoiceRecording[]
   settings               UserSettings?
   xpEntries              UserXP[]
   selectedLanguage       Language?            @relation("UserSelectedLanguage", fields: [selectedLanguageId], references: [id])
@@ -99,6 +104,8 @@ model Language {
   units        Unit[]
   users        User[]       @relation("UserSelectedLanguage")
   vocabularies Vocabulary[]
+  forumPosts   ForumPost[]
+  userStreaks  UserStreak[]
 
   @@map("languages")
 }
@@ -191,6 +198,7 @@ model Vocabulary {
   updatedAt         DateTime            @updatedAt @map("updated_at")
   flashcardProgress FlashcardProgress[]
   language          Language            @relation(fields: [languageId], references: [id], onDelete: Cascade)
+  voiceRecordings   VoiceRecording[]
 
   @@map("vocabularies")
 }
@@ -507,4 +515,97 @@ model UserSettings {
   user                       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("user_settings")
+}
+
+model UserStreak {
+  id               String    @id @default(cuid())
+  userId           String    @map("user_id")
+  languageId       String?   @map("language_id")
+  currentStreak    Int       @default(0) @map("current_streak")
+  longestStreak    Int       @default(0) @map("longest_streak")
+  lastActivityDate DateTime? @map("last_activity_date")
+  totalDays        Int       @default(0) @map("total_days")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  language         Language? @relation(fields: [languageId], references: [id], onDelete: SetNull)
+
+  @@map("user_streaks")
+}
+
+model UserStats {
+  id                   String   @id @default(cuid())
+  userId               String   @unique @map("user_id")
+  totalXP              Int      @default(0) @map("total_xp")
+  totalWordsLearned    Int      @default(0) @map("total_words_learned")
+  totalLessonsComplete Int      @default(0) @map("total_lessons_complete")
+  totalMinutesLearned  Int      @default(0) @map("total_minutes_learned")
+  averageScore         Float    @default(0) @map("average_score")
+  weeklyXP             Int      @default(0) @map("weekly_xp")
+  monthlyXP            Int      @default(0) @map("monthly_xp")
+  skillBreakdown       String?  @map("skill_breakdown") // JSON string: {speaking, listening, reading, writing}
+  learningPath         String?  @map("learning_path") // Current difficulty level
+  createdAt            DateTime @default(now()) @map("created_at")
+  updatedAt            DateTime @updatedAt @map("updated_at")
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_stats")
+}
+
+model ForumPost {
+  id         String         @id @default(cuid())
+  title      String
+  content    String
+  authorId   String         @map("author_id")
+  languageId String?        @map("language_id")
+  category   String         @default("general") // general, grammar, vocabulary, pronunciation, cultural
+  views      Int            @default(0)
+  upvotes    Int            @default(0)
+  isPinned   Boolean        @default(false) @map("is_pinned")
+  isClosed   Boolean        @default(false) @map("is_closed")
+  createdAt  DateTime       @default(now()) @map("created_at")
+  updatedAt  DateTime       @updatedAt @map("updated_at")
+  author     User           @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  language   Language?      @relation(fields: [languageId], references: [id], onDelete: SetNull)
+  comments   ForumComment[]
+
+  @@index([languageId])
+  @@index([authorId])
+  @@index([createdAt(sort: Desc)])
+  @@map("forum_posts")
+}
+
+model ForumComment {
+  id        String    @id @default(cuid())
+  content   String
+  authorId  String    @map("author_id")
+  postId    String    @map("post_id")
+  upvotes   Int       @default(0)
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  author    User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  post      ForumPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@index([postId])
+  @@index([authorId])
+  @@map("forum_comments")
+}
+
+model VoiceRecording {
+  id            String     @id @default(cuid())
+  userId        String     @map("user_id")
+  vocabularyId  String     @map("vocabulary_id")
+  audioUrl      String     @map("audio_url")
+  transcription String?
+  accuracy      Float?
+  pronunciation Float? // Confidence score
+  feedback      String?
+  recordedAt    DateTime   @default(now()) @map("recorded_at")
+  createdAt     DateTime   @default(now()) @map("created_at")
+  vocabulary    Vocabulary @relation(fields: [vocabularyId], references: [id], onDelete: Cascade)
+  User          User       @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([vocabularyId])
+  @@map("voice_recordings")
 }

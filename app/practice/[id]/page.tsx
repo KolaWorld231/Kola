@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useParams } from "next/navigation";
 import { PracticeInterface } from "@/components/lesson/practice-interface";
 import { ResultsScreen } from "@/components/lesson/results-screen";
 import { PageTransition } from "@/components/page-transition";
@@ -45,7 +46,9 @@ const MOCK_QUESTIONS = [
   },
 ];
 
-export default function PracticePage({ params }: { params: { id: string } }) {
+export default function PracticePage() {
+  const params = useParams();
+  const practiceId = params?.id as string;
   const [completed, setCompleted] = useState(false);
   const [score, setScore] = useState(0);
 

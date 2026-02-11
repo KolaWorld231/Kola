@@ -259,6 +259,25 @@ npm run test:coverage
 npm run test:ci
 ```
 
+### Playwright E2E (Browser)
+
+1. Install Playwright browsers (one-time):
+```bash
+npm run playwright:install
+```
+
+2. Run the E2E suite:
+```bash
+npx playwright test
+```
+
+CI notes — required secrets
+
+- `NEXTAUTH_SECRET` (required): used to sign NextAuth JWTs; CI will fail if missing.
+- `DATABASE_URL` (required): connection string for the test database.
+
+We include a pre-flight GitHub Action that fails fast when `NEXTAUTH_SECRET` is not configured in the repository secrets. Ensure those are added in the repository Settings → Secrets before running the E2E workflow.
+
 ### Test Structure
 
 - Component tests: `components/**/__tests__/**/*.test.tsx`

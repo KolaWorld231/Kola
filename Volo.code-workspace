@@ -7,7 +7,17 @@
 	"settings": {
 		"chat.tools.terminal.autoApprove": {
 			"git push": true,
-			"tee": true
+			"tee": true,
+			"/^node -e \"const \\{PrismaClient\\}=require\\('@prisma/client'\\);\\(async\\(\\)=>\\{const prisma=new PrismaClient\\(\\);const rows=await prisma\\.adminUser\\.findMany\\(\\);console\\.log\\('admin_users rows:',rows\\.length\\);console\\.log\\(rows\\);await prisma\\.\\$disconnect\\(\\);\\}\\)\\(\\)\\.catch\\(e=>\\{console\\.error\\(e\\);process\\.exit\\(1\\)\\}\\);\"$/": {
+				"approve": true,
+				"matchCommandLine": true
+			},
+			"/^node scripts/check-admin\\.js$/": {
+				"approve": true,
+				"matchCommandLine": true
+			},
+			"lsof": true,
+			"pkill": true
 		}
 	}
 }

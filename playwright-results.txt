@@ -1,0 +1,51 @@
+SyntaxError: /Users/visionalventure/Volo/tests/e2e/accessibility.spec.ts: Unexpected token (231:0)
+
+  229 |
+  230 |
+> 231 |
+      | ^
+
+   at accessibility.spec.ts:231
+
+  229 |
+  230 |
+> 231 |
+SyntaxError: /Users/visionalventure/Volo/tests/e2e/helpers/auth-helpers.ts: 'import' and 'export' may only appear at the top level. (113:0)
+
+  111 |  * Complete onboarding flow
+  112 |  */
+> 113 | export async function completeOnboarding(
+      | ^
+  114 |   page: Page,
+  115 |   options?: {
+  116 |     language?: string;
+
+   at learning-path.spec.ts:113
+
+  111 |     await expect(page.locator('[role="navigation"]')).toBeVisible();
+  112 |
+> 113 |     // Verify mobile-optimized sizes (smaller icons)
+  114 |     const icons = page.locator('a[aria-label*="Lesson"]');
+  115 |     if (await icons.count() > 0) {
+  116 |       const firstIcon = icons.first();
+    at Object.<anonymous> (/Users/visionalventure/Volo/tests/e2e/learning-path.spec.ts:6:1)
+SyntaxError: /Users/visionalventure/Volo/tests/e2e/helpers/auth-helpers.ts: 'import' and 'export' may only appear at the top level. (113:0)
+
+  111 |  * Complete onboarding flow
+  112 |  */
+> 113 | export async function completeOnboarding(
+      | ^
+  114 |   page: Page,
+  115 |   options?: {
+  116 |     language?: string;
+
+   at visual-regression.spec.ts:113
+
+  111 |   test("tablet viewport visual regression", async ({ page }) => {
+  112 |     await page.setViewportSize({ width: 768, height: 1024 }); // iPad size
+> 113 |     await page.goto("/dashboard");
+  114 |     await page.waitForLoadState("networkidle");
+  115 |     await page.waitForTimeout(1000);
+  116 |
+    at Object.<anonymous> (/Users/visionalventure/Volo/tests/e2e/visual-regression.spec.ts:10:1)
+
