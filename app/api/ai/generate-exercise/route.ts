@@ -3,12 +3,19 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/auth-options";
 import OpenAI from "openai";
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+function getOpenAIClient() {
+  const key = process.env.OPENAI_API_KEY;
+  if (!key) return null;
+  return new OpenAI({ apiKey: key });
+}
 
 export async function POST(request: NextRequest) {
   try {
+    const openai = getOpenAIClient();
+    if (!openai) {
+      return NextResponse.json({ error: "OPENAI_API_KEY not configured" }, { status: 501 });
+    }
+
     const session = await getServerSession(authOptions);
 
     if (!session?.user?.id) {
