@@ -15,14 +15,38 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Deploy to Vercel
-        uses: amondnet/vercel-action@v25
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          vercel-args: '--prod'
-          scope: ${{ secrets.VERCEL_ORG_ID }}
+      - name: Deploy to Vercel (retryable)
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          VERCEL_DEBUG: 1
+        run: |
+          set -euo pipefail
+
+          echo "• Deploying to Vercel (with retries)"
+          attempt=0
+          max_attempts=3
+
+          until [ $attempt -ge $max_attempts ]
+          do
+            attempt=$((attempt+1))
+            echo "Attempt $attempt/$max_attempts"
+
+            # Use npx vercel (same CLI used locally) and include debug flag
+            if npx vercel --prod -t "$VERCEL_TOKEN" --scope "$VERCEL_ORG_ID" -m "githubCommitSha=${GITHUB_SHA}"; then
+              echo "Vercel deploy succeeded"
+              break
+            fi
+
+            echo "Vercel CLI returned an error on attempt $attempt"
+            sleep $((attempt * 2))
+          done
+
+          if [ $attempt -ge $max_attempts ]; then
+            echo "Vercel deploy failed after $max_attempts attempts"
+            exit 1
+          fi
 
       - name: Run database migrations
         run: |
