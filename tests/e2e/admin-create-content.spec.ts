@@ -3,6 +3,18 @@ import { signInUser } from './helpers/auth-helpers';
 
 test.describe('Admin — create content (smoke)', () => {
   test('sign in as admin and create a unit', async ({ page }) => {
+    // Capture E2E console logs for instrumentation added to CreateUnitModal
+    const modalLogs: string[] = [];
+    page.on('console', (msg) => {
+      if (msg.type() === 'log' && msg.text().includes('[e2e] CreateUnitModal')) {
+        modalLogs.push(msg.text());
+        // Echo so Playwright job logs include these lines
+        // (useful when inspecting CI run output / traces)
+        // eslint-disable-next-line no-console
+        console.log('E2E-INSTRUMENT:', msg.text());
+      }
+    });
+
     // Sign in using seeded admin account
     await signInUser(page, 'admin@volo.test', 'password123');
 
