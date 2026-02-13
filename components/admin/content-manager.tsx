@@ -85,7 +85,7 @@ export function ContentManager({ languages: initialLanguages }: ContentManagerPr
       {/* Create New Unit Button */}
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold text-foreground">Content Tree</h2>
-        <Button onClick={() => setCreateUnitModal({ open: true })}>
+        <Button data-testid="open-create-unit" onClick={() => setCreateUnitModal({ open: true })}>
           <Plus className="mr-2 h-4 w-4" />
           Create Unit
         </Button>

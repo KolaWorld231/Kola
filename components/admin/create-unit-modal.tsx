@@ -78,7 +78,7 @@ export function CreateUnitModal({
       title="Create New Unit"
       size="lg"
     >
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4" data-testid="create-unit-modal">
         {error && (
           <div className="p-3 text-sm text-red-600 bg-red-50 rounded-lg border border-red-200">
             {error}
