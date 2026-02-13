@@ -21,10 +21,12 @@ jobs:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
           VERCEL_DEBUG: 1
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           set -euo pipefail
 
-          echo "• Deploying to Vercel (with retries)"
+          echo "• Deploying to Vercel (with retries + env injection)"
           attempt=0
           max_attempts=3
 
@@ -34,7 +36,8 @@ jobs:
             echo "Attempt $attempt/$max_attempts"
 
             # Use npx vercel (same CLI used locally) and include debug flag
-            if npx vercel --prod -t "$VERCEL_TOKEN" --scope "$VERCEL_ORG_ID" -m "githubCommitSha=${GITHUB_SHA}"; then
+            # Pass runtime env vars so Vercel deployment has DATABASE_URL and OPENAI_API_KEY
+            if npx vercel --prod -t "$VERCEL_TOKEN" --scope "$VERCEL_ORG_ID" -m "githubCommitSha=${GITHUB_SHA}" --env DATABASE_URL="$DATABASE_URL" --env OPENAI_API_KEY="$OPENAI_API_KEY"; then
               echo "Vercel deploy succeeded"
               break
             fi
