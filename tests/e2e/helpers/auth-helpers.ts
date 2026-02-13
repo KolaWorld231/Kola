@@ -82,7 +82,9 @@ export async function signInUser(
 
   // Fall back to manual sign in if test endpoint not available
   try {
-    await page.goto('/auth/signin', { waitUntil: 'networkidle', timeout: 15000 });
+    // Use DOMContentLoaded instead of networkidle to avoid hanging on long-lived
+    // network connections (websockets/event streams). Increase timeout.
+    await page.goto('/auth/signin', { waitUntil: 'domcontentloaded', timeout: 30000 });
     
     // Use id selectors that match the actual form inputs
     const emailInput = page.locator('#email');
