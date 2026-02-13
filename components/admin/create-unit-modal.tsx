@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -32,6 +32,19 @@ export function CreateUnitModal({
   const [difficulty, setDifficulty] = useState("beginner");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // E2E instrumentation: log mount and visibility for Playwright/debugging
+  useEffect(() => {
+    try {
+      console.log('[e2e] CreateUnitModal mounted', { defaultLanguageId, languagesCount: languages?.length ?? 0 });
+    } catch (e) {
+      console.log('[e2e] CreateUnitModal mounted');
+    }
+  }, []);
+
+  useEffect(() => {
+    console.log(`[e2e] CreateUnitModal isOpen=${isOpen}`);
+  }, [isOpen]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
